@@ -37,6 +37,10 @@ function loadingAjax(){
 	});
 }
 
+function messageDiv(form,type,message){
+	form.find('.message').html('<div class="mt-3 alert alert-' + type + '">' + message + '</div>');
+}
+
 
 (function ($) {
 	"use strict"; // Start of use strict
@@ -58,14 +62,17 @@ function loadingAjax(){
 			} else {
 				//Once the form passed the validation execute the ajax action
 				ajaxSend(form.serialize(),function(data){
-					
 				},function(out){
-					
+					if(out.result == 'success'){
+						if(out.url != '')
+                       		window.location.href = out.url;
+                    	if(out.resetform)
+                    		form.trigger('reset');
+					}
+					messageDiv(form,out.type,out.message);
 				});
-					
 			}
 			form[0].classList.add('was-validated');
-
 		});
 	}
 

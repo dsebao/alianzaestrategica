@@ -14,6 +14,15 @@ function url(){
 function urlt(){
 	echo get_bloginfo('template_url');
 }
+
+function getparams($g){
+    if(isset($_GET[$g])){
+        return $_GET[$g];
+    } else {
+        return '';
+    }
+}
+
  
 
 /*
@@ -25,6 +34,18 @@ function get_the_avatar_url($get_avatar){
     preg_match('#src=["|\'](.+)["|\']#Uuis', $get_avatar, $matches);
     return $matches[1];
 }
+
+
+/**
+ * 
+ * Create html button for email notification
+ *
+ */
+function htmlButton($l,$t){
+    $button = '<div><!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="'.$l.'" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="15%" stroke="f" fillcolor="#4137CF"><w:anchorlock/><center><![endif]--><a href="'.$l.'" style="background-color:#4137CF;border-radius:6px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:13px;font-weight:bold;line-height:40px;text-align:center;text-decoration:none;width:200px;-webkit-text-size-adjust:none;">'.$t.'</a><!--[if mso]></center></v:roundrect><![endif]--></div>';
+    return $button;
+}
+
 
 
 /**
@@ -336,3 +357,61 @@ function disable_default_dashboard_widgets() {
 	//remove_meta_box('dashboard_right_now', 'dashboard', 'core');
 }
 add_action('admin_menu', 'disable_default_dashboard_widgets');
+
+
+
+/**
+ * Add a general nonce to requests
+ */
+function add_general_nonce(){
+    $nonce = wp_create_nonce( 'noncefield' );
+    echo "<meta name='csrf-token' content='$nonce'>";
+}
+// To add to front-end pages
+add_action( 'wp_head', 'add_general_nonce' );
+
+
+/**
+ * Verify the submitted nonce
+ */
+function verify_general_nonce(){
+    $nonce = isset($_SERVER['HTTP_X_CSRF_TOKEN']) ? $_SERVER['HTTP_X_CSRF_TOKEN']: '';
+    if (!wp_verify_nonce( $nonce, 'noncefield')) {
+        die();
+    }
+}
+
+/**
+ * Send email notification
+ *
+ * @param [string] $subject
+ * @param [string] $content
+ * @param [string] $email
+ * @return boolean
+ */
+function sendNotification($subject,$content,$email){
+	$thebody = '<!doctype html><html><head><meta name="viewport" content="width=device-width"> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <title>{{subject}}</title> <style media="all" type="text/css"> @media all{.btn-primary table td:hover{background-color: #34495e !important;}.btn-primary a:hover{background-color: #34495e !important; border-color: #34495e !important;}}@media all{.btn-secondary a:hover{border-color: #34495e !important; color: #34495e !important;}}@media only screen and (max-width: 620px){table[class=body] h1{font-size: 28px !important; margin-bottom: 10px !important;}table[class=body] h2{font-size: 22px !important; margin-bottom: 10px !important;}table[class=body] h3{font-size: 16px !important; margin-bottom: 10px !important;}table[class=body] p, table[class=body] ul, table[class=body] ol, table[class=body] td, table[class=body] span, table[class=body] a{font-size: 16px !important;}table[class=body] .wrapper, table[class=body] .article{padding: 10px !important;}table[class=body] .content{padding: 0 !important;}table[class=body] .container{padding: 0 !important; width: 100% !important;}table[class=body] .header{margin-bottom: 10px !important;}table[class=body] .main{border-left-width: 0 !important; border-radius: 0 !important; border-right-width: 0 !important;}table[class=body] .btn table{width: 100% !important;}table[class=body] .btn a{width: 100% !important;}table[class=body] .img-responsive{height: auto !important; max-width: 100% !important; width: auto !important;}table[class=body] .alert td{border-radius: 0 !important; padding: 10px !important;}table[class=body] .span-2, table[class=body] .span-3{max-width: none !important; width: 100% !important;}table[class=body] .receipt{width: 100% !important;}}@media all{.ExternalClass{width: 100%;}.ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div{line-height: 100%;}.apple-link a{color: inherit !important; font-family: inherit !important; font-size: inherit !important; font-weight: inherit !important; line-height: inherit !important; text-decoration: none !important;}}</style> </head> <body class="" style="font-family: sans-serif; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; background-color: #f6f6f6; margin: 0; padding: 0;"> <table border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background-color: #f6f6f6;" width="100%" bgcolor="#f6f6f6"> <tr> <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td><td class="container" style="font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; Margin: 0 auto !important; max-width: 580px; padding: 10px; width: 580px;" width="580" valign="top"> <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;"> <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;"></span> <table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #fff; border-radius: 3px;" width="100%"> <tr> <td class="wrapper" style="font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;" valign="top"> <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;" width="100%"> <tr> <td style="font-family: sans-serif; font-size: 15px; vertical-align: top;" valign="top"> <span style="letter-spacing:4px;font-weight:700;color:#999999">' . $GLOBALS['SITENAME'] .'</span> </td></tr><tr> <td height="30"></td></tr><tr> <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">{{content}}<br></td></tr></table> </td></tr></table> <div class="footer" style="clear: both; padding-top: 10px; text-align: center; width: 100%;"> <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;" width="100%"> </table> </div></div></td><td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td></tr></table> </body></html>';
+
+    $tpl = str_replace('{{content}}', $content, $thebody);
+    $tpl = str_replace('{{subject}}', $subject, $tpl);
+    $tpl = str_replace('{{site}}', $GLOBALS['SITENAME'], $tpl);
+
+    $headers  = 'MIME-Version: 1.0' . "\r\n";
+    $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+    $headers .= 'From: '.$GLOBALS['SITENAME'].' <noreply@'.$GLOBALS['DOMAIN'].'>' . "\r\n" .
+    'X-Mailer: PHP/' . phpversion();
+
+    $sent = wp_mail($email, $subject, $tpl, $headers);
+    if($sent){
+    	return $sent;
+    } else {
+    	return false;
+    }
+}
+
+
+if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    ini_set( 'error_log', get_template_directory_uri() . '/log.txt' );
+}

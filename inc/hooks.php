@@ -2,33 +2,6 @@
 
 
 /**
- * Adding general nonce to all ajax requests
- */
-function add_general_nonce() {
-    $nonce = wp_create_nonce( 'securitynonce' );
-    echo "<meta name='csrf-token' content='$nonce'>";
-}
-// To add to front-end pages
-add_action( 'wp_head', 'add_general_nonce' );
-
-
-/**
- * Verify the submitted nonce
- *
- * @return  void
- */
-function verify_general_nonce() {
-    $nonce = isset( $_SERVER['HTTP_X_CSRF_TOKEN'] )
-        ? $_SERVER['HTTP_X_CSRF_TOKEN']
-       : '';
-    if ( !wp_verify_nonce( $nonce, 'my_general_nonce' ) ) {
-        die();
-    }
-}
-
-
-
-/**
  * Create a loading page in ajax calls
  */
 
