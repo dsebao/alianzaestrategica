@@ -24,9 +24,10 @@ $pink: #e83e8c !default;
 $red: #e74a3b !default;
 $orange: #fd7e14 !default;
 $yellow: #f6c23e !default;
-$green: #1cc88a !default;
+$green: #13BAB0 !default;
 $teal: #20c9a6 !default;
 $cyan: #CFE0F9 !default;
+$darkcyan: #CDE9F9 !default;
 
 // Custom Colors
 $brand-google: #ea4335 !default;
@@ -39,6 +40,16 @@ $yiq-contrasted-threshold: 195 !default;
 $body-color: $gray-600 !default;
 
 $secondary: $cyan;
+
+$success: $green;
+
+$info: $darkcyan;
+
+$alert-bg-level:0;
+$alert-border-level:0;
+$alert-color-level:10;
+
+
 
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap');
 
@@ -84,3 +95,15 @@ $dropdown-border-color: $border-color !default;
 $login-image: 'https://source.unsplash.com/PaM7SD5wM6g/600x800' !default;
 $register-image: 'https://source.unsplash.com/Mv9hjnEUHR4/600x800' !default;
 $password-image: 'https://source.unsplash.com/oWTW-jNGl9I/600x800' !default;
+
+//Input and buttons
+$font-size-base: 0.9rem;
+
+$input-btn-padding-y:         .5rem !default;
+$input-btn-padding-x:         .9rem !default;
+$input-btn-font-family:       null !default;
+
+$custom-file-text: (
+  en: "Browse",
+  es: "Elegir"
+);

@@ -99,7 +99,7 @@ function sendform(){
 		} else {
 
 			//Error on the credentials
-			wp_send_json(array('result' => 'nouser','type' => 'warning', 'message'=> 'Datos de acceso incorrectos','resetform' => true));
+			wp_send_json(array('result' => 'nouser','type' => 'danger', 'message'=> 'Datos de acceso incorrectos','resetform' => true));
 
 		}
 	}
@@ -112,8 +112,10 @@ function sendform(){
 
 		if ($u){
 			$user_login = $u->user_login;
-        	$user_email = $u->user_email;
-        	$key = substr( md5( uniqid( microtime() ) ), 0, 8);
+			$user_email = $u->user_email;
+			
+			$key = substr( md5( uniqid( microtime() ) ), 0, 8);
+			
         	global $wpdb;
         	$wpdb->query("UPDATE $wpdb->users SET user_activation_key = '$key' WHERE user_login = '$user_login'");
 
@@ -151,9 +153,9 @@ function sendform(){
 				update_user_meta($u->ID,'_data_user_key',$link);
 
 				//Send notification email
-				$subject = __( 'Validate your email', 'growlink' );
-				$link = get_bloginfo('url') ."/login?_emailvalidation=" . $link . "&user=" . $u->ID;
-				$content = "<p>" . __( 'You have resend the link to validate your acount. Please click the next link.', 'growlink' ) . "</p><p style='margin-top:25px;margin-bottom:25px'><a href='".$link."' style='background: #4137CF;color:#ffffff;padding:14px 30px;text-decoration:none;font-size:17px;text-align-center;border-radius:6px' target='_blank' title=''>Confirm email</a><br>";
+				$subject = 'Valida tu cuenta';
+				$link = get_bloginfo('url') ."/ingresar?_emailvalidation=" . $link . "&user=" . $u->ID;
+				$content = "<p>Hace unos momentos reenviaste el codigo para validar tu cuenta. Hacé click en el enlace inferior para validarla.</p><p style='margin-top:25px;margin-bottom:25px'><a href='".$link."' style='background: #4137CF;color:#ffffff;padding:14px 30px;text-decoration:none;font-size:17px;text-align-center;border-radius:6px' target='_blank' title=''>Confirm email</a><br>";
 
 				$sent = sendNotification($subject,$content,$u->user_email,true);
 	    	}
@@ -168,3 +170,76 @@ function sendform(){
 
 add_action('wp_ajax_sendform', 'sendform');
 add_action('wp_ajax_nopriv_sendform', 'sendform');
+
+
+function userform(){
+
+	//Verify the nonce added in head meta data
+	verify_general_nonce();
+
+	if($_POST['typeform'] == 'updateprofile_form'){
+		global $theuser;
+
+		$nombre = sanitize_text_field($_POST['nombre']);
+		$apellido = sanitize_text_field($_POST['apellido']);
+		$email = sanitize_email($_POST['email']);
+		$tel = sanitize_text_field($_POST['tel']);
+		$cuit = sanitize_text_field($_POST['cuit']);
+
+		$update = wp_update_user(array(
+			'ID' => $theuser->ID,
+			'display_name' => $nombre . " ". $apellido,
+			'first_name' => $nombre,
+			'last_name' => $apellido,
+			'user_email' => $email
+		));
+
+		update_user_meta($theuser->ID,'user_tel',$tel);
+		update_user_meta($theuser->ID,'user_cuit',$cuit);
+
+		if(isset($_FILES['picturefile'])){
+			if(any_uploaded('picturefile')){
+				require_once ABSPATH.'wp-admin/includes/file.php';
+				$urlsfiles = array();
+				$filesup = rearrange_files($_FILES['picturefile']);
+
+				foreach ($filesup as $filesingle){
+
+					$status = wp_handle_upload($filesingle, array('test_form' => false));
+					
+					if(empty($status['error'])){
+						$uploads = wp_upload_dir();
+						$theurl = $uploads['url'].'/'.basename($status['file']);
+						
+						//get the path of the file for resizing
+						$newurl = $uploads['path'] . '/' . basename($status['file']);
+						$image = wp_get_image_editor($newurl);
+
+						//If the file is handled resize it
+						if ( ! is_wp_error( $image ) ) {
+							$image->resize( 200, 200, true );
+							$image->save($newurl);
+						}
+
+						//TODO: Maybe in avatar folders?
+
+						//deleted urlsfiles array here, just single url
+						update_user_meta($theuser->ID,$GLOBALS['avatar_meta'],$theurl);
+					} else{
+						$errores[] = "Error al subir archivo<br/>";
+					}
+				}
+			}
+		}
+
+		if($update){
+			wp_send_json(array('result' => 'updatedprofile','type' => 'success','redirect' => home_url('/dashboard/perfil/')));
+		} else {
+			wp_send_json(array('result' => 'error','type' => 'warning','message'=> 'Ocurrio un error'));
+		}
+		
+	}
+
+	die();
+}
+add_action('wp_ajax_userform', 'userform');

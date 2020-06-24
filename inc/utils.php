@@ -70,12 +70,56 @@ function disable_emojicons_tinymce( $plugins ) {
 }
 
 /**
- * Disable xmlrpc.php
+ * Disable xmlrpc.php and feed link rss
  */
  
 add_filter( 'xmlrpc_enabled', '__return_false' );
-remove_action( 'wp_head', 'rsd_link' );
-remove_action( 'wp_head', 'wlwmanifest_link' );
+remove_action( 'wp_head' , 'rsd_link' );
+remove_action( 'wp_head' , 'wlwmanifest_link' );
+remove_action( 'wp_head' , 'feed_links', 2 );
+remove_action( 'wp_head' , 'feed_links_extra' , 3 );
+remove_action( 'wp_head' , 'rest_output_link_wp_head' );
+remove_action( 'wp_head', 'wp_oembed_add_discovery_links' );
+remove_action( 'template_redirect', 'rest_output_link_header', 11 );
+
+/**
+ * Remove Wp Embed js from footer
+ *
+ * @return void
+ */
+function my_deregister_scripts(){
+	wp_dequeue_script( 'wp-embed' );
+}
+add_action( 'wp_footer', 'my_deregister_scripts' );
+
+/**
+ * emove Guttenberg scripts
+ *
+ * @return void
+ */
+function smartwp_remove_wp_block_library_css(){
+	wp_dequeue_style( 'wp-block-library' );
+	wp_dequeue_style( 'wc-block-style' );
+}
+add_action( 'wp_enqueue_scripts', 'smartwp_remove_wp_block_library_css', 100 );
+
+/**
+ * Feed links blocked
+ *
+ * @return void
+ */
+function itsme_disable_feed() {
+	wp_die( __( 'No feed available, please visit the <a href="'. esc_url( home_url( '/' ) ) .'">homepage</a>!' ) );
+}
+
+add_action('do_feed', 'itsme_disable_feed', 1);
+add_action('do_feed_rdf', 'itsme_disable_feed', 1);
+add_action('do_feed_rss', 'itsme_disable_feed', 1);
+add_action('do_feed_rss2', 'itsme_disable_feed', 1);
+add_action('do_feed_atom', 'itsme_disable_feed', 1);
+add_action('do_feed_rss2_comments', 'itsme_disable_feed', 1);
+add_action('do_feed_atom_comments', 'itsme_disable_feed', 1);
+
 
 
 /* ----------------------------------------------------------------------------
@@ -409,9 +453,53 @@ function sendNotification($subject,$content,$email){
     }
 }
 
-
+/**
+ * Create a log txt file in theme folder
+ */
 if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
     ini_set( 'error_log', get_template_directory_uri() . '/log.txt' );
+}
+
+/**
+ * Detect page template
+ *
+ * @param array $pages Whatever template to detect, also parent pages
+ * @return bool If current page template is viewed, return true
+ */
+function detectDashboard($pages = array()){
+    //Detect the template
+    $pagetemplate = get_page_template_slug();
+}
+
+/**
+ * Detect files uploaded
+ *
+ * @param string $name The input name
+ * @return bool
+ */
+function any_uploaded($name){
+	if(is_array($_FILES[$name]['error'])){
+		foreach ($_FILES[$name]['error'] as $ferror) {
+			return ($ferror != UPLOAD_ERR_NO_FILE) ? true : false;
+		}
+	} else {
+		return ($_FILES[$name]['error'] != UPLOAD_ERR_NO_FILE) ? true : false;
+	}
+}
+
+/**
+ * Rearrange array of $_FILE for better reading
+ *
+ * @param array $arr
+ * @return array
+ */
+function rearrange_files($arr) {
+    foreach($arr as $key => $all) {
+        foreach($all as $i => $val) {
+            $new_array[$i][$key] = $val;
+        }
+    }
+    return $new_array;
 }

@@ -4,6 +4,11 @@
  * Template Name: Login
  */
 
+//Redirects if loggued
+if(is_user_logged_in()){
+    wp_redirect('/dashboard');
+}
+
 $state = getparams('action');
 
 get_header('auth');?>
@@ -109,7 +114,7 @@ get_header('auth');?>
 					</form>
 					<hr>
 					<div class="">
-						<span class="small">No estas registrado?</span> <a class="small" href="">Crear una cuenta</a>
+						<span class="small">No estas registrado?</span> <a class="small" href="<?php url();?>/registro">Crear una cuenta</a>
 					</div>
 				
 				<?php }?>

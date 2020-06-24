@@ -1,8 +1,13 @@
 <?php
 
+//Simple function to avoid accesing if user are not logued
+function protectedPage(){
+    if(!is_user_logged_in()){
+        wp_redirect(home_url('/'));
+    }
+}
 
 //Get the current user data
-
 if(is_user_logged_in()){
     global $theuser;
     $theuser = wp_get_current_user();
@@ -28,6 +33,21 @@ if(isset($_GET['action']) && $_GET['action'] == 'resetpass' && isset($_GET['key'
     }
 }
 
+add_filter('show_admin_bar', '__return_false');
+
+
+/**
+ * Avoid cache
+ *
+ */
+function hook_nocache() {?>
+	<meta http-equiv="cache-control" content="max-age=0" />
+	<meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="expires" content="0" />
+	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+	<meta http-equiv="pragma" content="no-cache" />
+<?php }
+add_action('wp_head', 'hook_nocache');
 
 
 

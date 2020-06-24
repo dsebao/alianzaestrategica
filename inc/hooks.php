@@ -21,3 +21,24 @@ function hide_update_notice_to_all_but_admin() {
     }
 }
 add_action( 'admin_head', 'hide_update_notice_to_all_but_admin', 1 );
+
+/**
+ * 
+ * Logout Redirect
+ *
+ */
+function redirect_after_logout(){
+    wp_redirect(home_url('/'));
+    exit();
+}
+add_action('wp_logout','redirect_after_logout');
+
+function custom_avatars($avatar, $id_or_email, $size){
+    $image_url = get_user_meta($id_or_email, $GLOBALS['avatar_meta'], true);
+      if($image_url !== '' && is_int($id_or_email))
+             $return = '<img src="'.$image_url.'" class="avatar photo" width="'.$size.'" height="'.$size.'"/>';
+      elseif($avatar)
+          $return = $avatar;
+    return $return;
+  }
+  add_filter('get_avatar', 'custom_avatars', 10, 5);

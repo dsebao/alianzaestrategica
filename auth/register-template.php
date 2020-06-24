@@ -4,6 +4,11 @@
  * Template Name: Signup
  */
 
+ //Redirects if loggued
+if(is_user_logged_in()){
+    wp_redirect('/dashboard');
+}
+
 get_header('auth');?>
 
 		<!-- Outer Row -->
@@ -37,10 +42,6 @@ get_header('auth');?>
 							<input type="password" name="pass" class="form-control form-control-user" placeholder="Contraseña">
 						</div>
 
-						<div class="mb-4">
-							<span class="small">Perdiste tu contraseña?</span> <a class="small" href="forgot-password.html">Recuperala</a>
-						</div>
-
 						<input type="hidden" name="action" value="sendform">
 						<input type="hidden" name="typeform" value="register_form">
 
@@ -48,7 +49,7 @@ get_header('auth');?>
 					</form>
 
 					<div class="my-4">
-					<span class="small">No tenés una cuenta?</span> <a class="small" href="">Crear una</a>
+					<span class="small">Ya tenés una cuenta?</span> <a class="small" href="<?php url();?>/ingresar">Ingresar</a>
 					</div>
 				</div>
 

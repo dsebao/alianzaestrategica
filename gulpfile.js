@@ -28,10 +28,7 @@ const banner = ['/*!\n',
 // BrowserSync
 function browserSync(done) {
   browsersync.init({
-    server: {
-      baseDir: "./"
-    },
-    port: 3000
+	proxy: "alianza.local",
   });
   done();
 }
@@ -74,6 +71,11 @@ function modules() {
   // Font Awesome
   var fontAwesome = gulp.src('./node_modules/@fortawesome/**/*')
     .pipe(gulp.dest('./vendor'));
+  
+  // Notie
+  var notie = gulp.src('./node_modules/notie/dist/**/*')
+  .pipe(gulp.dest('./vendor/notie'));
+
   // jQuery Easing
   var jqueryEasing = gulp.src('./node_modules/jquery.easing/*.js')
     .pipe(gulp.dest('./vendor/jquery-easing'));
@@ -83,8 +85,9 @@ function modules() {
       '!./node_modules/jquery/dist/core.js'
     ])
     .pipe(gulp.dest('./vendor/jquery'));
-  //Removed ChartJs const
-  return merge(bootstrapJS, bootstrapSCSS, dataTables, validatorJS,fontAwesome, jquery, jqueryEasing);
+  
+    //Removed ChartJs const
+  return merge(bootstrapJS, bootstrapSCSS, dataTables,notie,validatorJS,fontAwesome, jquery, jqueryEasing);
 }
 
 // CSS task
@@ -134,7 +137,7 @@ function js() {
 function watchFiles() {
   gulp.watch("./scss/**/*", css);
   gulp.watch(["./js/**/*", "!./js/**/*.min.js"], js);
-  gulp.watch("./**/*.html", browserSyncReload);
+  gulp.watch("./**/*.php", browserSyncReload);
 }
 
 // Define complex tasks
