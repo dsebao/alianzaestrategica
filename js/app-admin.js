@@ -15,7 +15,7 @@ function progressHandlingFunction(e){
     }
 }
 
-function ajaxSend(mydata,beforeSend,handleData,type,datatype,globaltype){
+function ajaxSend(mydata,beforeSend,handleData,datatype,type,globaltype){
 	var type = type || 'POST';
 	var datatype = datatype || 'json';
 	var globaltype = globaltype || true;
@@ -82,30 +82,43 @@ function loadingAjax(){
 }
 
 function messageDiv(type,message){
-	notie.alert({ type: type, text: message, time: 2 });
+	notie.alert({ type: type, text: message, time: 100});
 	//form.find('.message').html('<div class="mt-3 alert alert-' + type + '">' + message + '</div>');
 }
 
 function jsCustomAction(){
 
 	// Detect custom actions
-	$('*[data-action]').click(function(e){
+	$(document).on('click','*[data-action]',function(e){
 		e.preventDefault();
 		var t = $(this);
 		var action = t.data('action');
 
-		/*
-		*
-		* Define the user business type
-		*
-		*/
-		if(action == 'js-select-business'){
-			var dataval = t.data('val');
+		if(action == 'js-adherirme-empresa'){
+			var empresa = t.data('idempresa');
 			
 			//Send the option trough ajax to the db
-			ajaxSend('action=sendform',function(data){
+			ajaxSend('action=userform&typeform=adherirme_empresa_form&empresa=' + empresa,function(data){
 			},function(out){
+				if(out.result == 'agregado')
+					window.location.href = out.url;
+
 			});
+		}
+	});
+}
+
+function formvalidations(){
+	$('form.simpleform').submit(function(event) {
+		var form = $(this);
+		event.preventDefault();
+
+		if (form[0].checkValidity() === false) {
+			event.preventDefault();
+			event.stopPropagation();
+			form[0].classList.add('was-validated');
+		} else {
+			form.submit();
 		}
 	})
 }
@@ -121,6 +134,7 @@ function ajaxForms(){
 		if (form[0].checkValidity() === false) {
 			event.preventDefault();
 			event.stopPropagation();
+			form[0].classList.add('was-validated');
 		} else {
 			//Once the form passed the validation execute the ajax action
 			ajaxSend(form.serialize(),function(data){
@@ -130,16 +144,15 @@ function ajaxForms(){
 					if(out.url != '')
 						   window.location.href = out.url;
 					if(out.resetform)
-						form.trigger('reset');
+						form.trigger('reset');	
 				}
 				if(typeof out.message !== 'undefined')
 					messageDiv(out.type,out.message);
 				
 			});
-			
-		}
-		form[0].classList.add('was-validated');
+		}	
 	});
+	
 
 	$('form.js-ajaxform-media').submit(function(event) {
 		var form = $(this);
@@ -155,16 +168,31 @@ function ajaxForms(){
 				if(data.result){
 					if(data.redirect != '')
 						window.location.href = data.redirect;
-
 				}
-				
+
 				if(typeof out.message !== 'undefined')
 					messageDiv(out.type,out.message);
 			},function(data){
 			});
-
 		}
 		form[0].classList.add('was-validated');
+	});
+
+	$('form.js-consultacuit').submit(function(event) {
+		var form = $(this);
+		event.preventDefault();
+
+		if (form[0].checkValidity() === false) {
+			event.preventDefault();
+			event.stopPropagation();
+			form[0].classList.add('was-validated');
+		} else {
+			//Once the form passed the validation execute the ajax action
+			ajaxSend(form.serialize(),function(data){
+			},function(out){
+				form.find('.js-return').html(out);
+			},'text');
+		}	
 	});
 }
 
@@ -229,6 +257,8 @@ function ajaxForms(){
 		}, 1000, 'easeInOutExpo');
 		e.preventDefault();
 	});
+
+	formvalidations();
 
 	ajaxForms();
 

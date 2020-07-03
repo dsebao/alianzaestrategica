@@ -6,18 +6,7 @@ $usermeta = get_user_meta($theuser->ID);
 
 ?>
 <form class="user needs-validation js-ajaxform-media" method="post" novalidate enctype="multipart/form-data">
-    <div class="message"></div>
     <div class="row">
-        <div class="col-md-4">
-            <div class="avatarthumb text-center mb-3">
-                <img class="img-profile rounded-circle" width="120px" src="<?php echo get_the_avatar_url(get_avatar($theuser->ID, 96,'','',array('scheme' => 'https')));?>">
-            </div>
-            <label for="picturefile">IMAGEN DE PERFIL</label>
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" id="picturefile" name="picturefile[]" lang="es">
-                <label class="custom-file-label" for="picturefile">Seleccionar Archivo</label>
-            </div>
-        </div>
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-6">
@@ -72,6 +61,16 @@ $usermeta = get_user_meta($theuser->ID);
                 <input type="hidden" name="action" value="userform">
                 <input type="hidden" name="typeform" value="updateprofile_form">
                 <button class="btn btn-primary">Guardar información</button>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="avatarthumb text-center mb-3">
+                <img class="img-profile rounded-circle" width="120px" src="<?php echo get_the_avatar_url(get_avatar($theuser->ID, 96,'','',array('scheme' => 'https')));?>">
+            </div>
+            <label for="picturefile">IMAGEN DE PERFIL</label>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="picturefile" name="picturefile[]" lang="es">
+                <label class="custom-file-label" for="picturefile">Seleccionar Archivo</label>
             </div>
         </div>
     </div>

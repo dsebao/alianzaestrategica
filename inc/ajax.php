@@ -1,5 +1,8 @@
 <?php
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 function sendform(){
 
     //Verify the nonce added in head meta data
@@ -32,6 +35,7 @@ function sendform(){
 			//generate key for validation
 			$link = md5(uniqid());
 			update_user_meta($user->ID,'_data_user_key',$link);
+			update_user_meta($user->ID,'user_data','');
 
 			//Send notification email
 			$subject = 'Por favor confirma tu cuenta';
@@ -66,6 +70,7 @@ function sendform(){
 		//Detect if validated the email
 		//User exist?
 		$u = get_user_by('email',$creds['user_email']);
+		
 		$check = (is_object($u)) ? wp_authenticate_username_password( NULL, $u->user_login,$creds['user_password']) : new WP_Error('error');
 
 		if(is_object($u))
@@ -86,21 +91,19 @@ function sendform(){
 				wp_set_auth_cookie($user->ID,true);
 				wp_set_current_user($user->ID);
 
-				wp_send_json(array('result'=> 'success','url' => home_url('dashboard')));
+				wp_send_json(array('result'=> 'success','url' => home_url('/dashboard')));
 
 			} else {
 
 				$urllink = get_bloginfo('url') . "/ingresar?action=resendvalidation";
-				$messagebox = "Tenes que validar tu correo<br><a href='" . $urllink . "'>Reenviar la verificación via email</a>";
+				$messagebox = "Tenés que validar tu correo. <a href='" . $urllink . "'>Reenviar la verificación via email</a>";
 
-				wp_send_json(array('result' => 'novalidate','type' => 'warning','message'=> $messagebox,'resetform' => true));
+				wp_send_json(array('result' => 'error','type' => 'warning','message'=> $messagebox,'resetform' => true));
 			}
 
 		} else {
-
 			//Error on the credentials
-			wp_send_json(array('result' => 'nouser','type' => 'danger', 'message'=> 'Datos de acceso incorrectos','resetform' => true));
-
+			wp_send_json(array('result' => 'error','type' => 'warning', 'message'=> 'Datos de acceso incorrectos','resetform' => true));
 		}
 	}
 	
@@ -126,10 +129,10 @@ function sendform(){
 
 			$sent = sendNotification($subject,$content,$user_email,true);
 
-			wp_send_json(array('result' => 'resetok','type' => 'success','message'=> 'Las instrucciones se te enviaron via email','resetform' => true));
+			wp_send_json(array('result' => 'success','type' => 'success','message'=> 'Las instrucciones se te enviaron via email','resetform' => true,'url' => ''));
 
 		} else {
-			wp_send_json(array('result' => 'nouser','type' => 'danger','message'=> 'Este usuario no existe','resetform' => true));
+			wp_send_json(array('result' => 'error','type' => 'error','message'=> 'Este usuario no existe','resetform' => true));
 		}
 	}
 
@@ -138,14 +141,19 @@ function sendform(){
 		$pass = $_POST['pass'];
 	    if($u){
 	    	wp_set_password($pass,$u->ID);
-	    	wp_send_json(array('result' => 'resetpass','action' => 'resetok','type' => 'success','message'=> "Contraseña modificada!",'resetform' => true,'url' => get_bloginfo('url') . "/ingresar?action=resetpasssuccess"));
+	    	wp_send_json(array('result' => 'success','type' => 'success','message'=> "Contraseña modificada!",'resetform' => true,'url' => get_bloginfo('url') . "/ingresar?action=resetpasssuccess"));
 	    } else {
 	    	wp_send_json(array('result' => 'nouser','type' => 'danger','message'=> 'Este usuario no existe','resetform' => true));
 	    }
 	}
 
-	if($_POST['typeform'] == 'form_resendvalidation'){
-		$u = get_user_by('email',$_POST['email']);
+	if($_POST['typeform'] == 'resendcode_form'){
+		$email = is_email($_POST['email']);
+		$u = false;
+		
+		if($email)
+			$u = get_user_by('email',$email);
+		
 	    if($u){
 	    	$validatekey = get_user_meta($u->ID, '_data_user_key',true);
 	    	if($validatekey != ''){
@@ -238,6 +246,73 @@ function userform(){
 			wp_send_json(array('result' => 'error','type' => 'warning','message'=> 'Ocurrio un error'));
 		}
 		
+	}
+
+	// if($_POST['typeform'] == 'userproject_form'){
+	// 	global $theuser;
+
+	// 	$proyecto = sanitize_text_field($_POST['val']);
+	// 	$u = update_user_meta($theuser->ID,'user_data',wp_json_encode(array('proyecto' => $proyecto)));
+
+	// 	if($u)
+	// 		wp_send_json(array('result' => 'updatedprofile','type' => 'success','url' => home_url('/dashboard/perfil')));
+	// 	else
+	// 		wp_send_json(array('result' => 'error','type' => 'warning','message'=> 'Ocurrio un error'));
+	// }
+
+
+	if($_POST['typeform'] == 'consultacuit_form'){
+		
+
+
+		$cuit = sanitize_text_field($_POST['cuit']);
+
+		$data = '';
+		
+		$q = array (
+			'post_type'=> 'empresas',
+			'posts_per_page' => -1,
+			'meta_query' => array(
+				array(
+					'key' => 'empresa_cuit',
+					'value' => $cuit,
+					'compare' => '='
+				)
+			)
+		);
+		$the_query = new WP_Query($q);
+		
+		if ( $the_query->have_posts() ) : while ( $the_query->have_posts() ) : $the_query->the_post();
+			$data .= "<div class='bg-light p-3 my-3 c-empresa d-flex align-items-center justify-content-between'>" . get_the_title(). "<a href='#' data-action='js-adherirme-empresa' data-idempresa='". get_the_ID() . "' class='btn btn-sm btn-secondary'>Solicitar adhesión</a></div>";
+		endwhile; else:
+			$data = '<div class="mt-3 alert alert-info">No se han encontrado resultados</div>';
+		endif;
+
+		echo $data;
+	}
+
+	if($_POST['typeform'] == 'adherirme_empresa_form'){
+		//Obtengo la instancia del Usuario
+		$userClass = UserData::inst();
+
+		$empresa = $_POST['empresa'];
+
+		//Obtenga la data de la empresa asociada al usuario
+		$data = $userClass->getUserData('user_empresa');
+
+		$data[] = array('id' => $empresa, 'estado' => 'pendiente','cargo' => '','rol' => '');
+
+		//Actualizo la info
+		$update = $userClass->updateUserData('user_empresa',$data);
+
+		if($update){
+			wp_send_json(array('result' => 'agregado','url' => home_url('/dashboard/perfil')));
+		} else {
+			wp_send_json(array('result' => 'error','type' => 'error','message' => 'Ocurrio un error'));
+		}
+		
+		
+
 	}
 
 	die();

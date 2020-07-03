@@ -52,6 +52,7 @@
         "gulp-uglify": "3.0.2",
         "jquery-validation": "^1.19.2",
         "merge-stream": "2.0.0",
-        "notie": "^4.3.1"
+        "notie": "^4.3.1",
+        "select2": "^4.0.13"
     }
 }

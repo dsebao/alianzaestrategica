@@ -1,5 +1,7 @@
 <?php
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Create a loading page in ajax calls
@@ -42,3 +44,21 @@ function custom_avatars($avatar, $id_or_email, $size){
     return $return;
   }
   add_filter('get_avatar', 'custom_avatars', 10, 5);
+
+
+/**
+ * Register custom query vars
+ *
+ * @param array $vars The array of available query variables
+ * 
+ * @link https://codex.wordpress.org/Plugin_API/Filter_Reference/query_vars
+ */
+function custom_query_vars_filter($vars) {
+    $vars[] .= '_emailvalidation';
+    $vars[] .= 'key';
+    $vars[] .= 'user';
+    $vars[] .= 'action';
+    return $vars;
+  }
+  add_filter( 'query_vars', 'custom_query_vars_filter' );
+  

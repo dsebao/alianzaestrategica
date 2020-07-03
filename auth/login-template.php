@@ -80,10 +80,40 @@ get_header('auth');?>
 					
 
 					<?php } elseif($state == 'resendvalidation'){?>
-					Resend validation
+										
+					<h1 class="h4 text-gray-800 mb-4">Reenviar validación de correo</h1>
+					
+					<form class="user needs-validation js-ajaxform" method="post" novalidate>
+
+						<div class="message"></div>
+
+						<div class="form-group">
+							<input type="email" name="email" class="form-control form-control-user" id="email"
+								aria-describedby="email" placeholder="Ingresa tu email" required>
+							<div class="invalid-feedback">Ingresá un email válido</div>
+						</div>
+
+						<button type="submit" class="btn btn-primary btn-user btn-block">
+							Reenviar código
+						</button>
+
+						<input type="hidden" name="action" value="sendform">
+						<input type="hidden" name="typeform" value="recoverpass_form">
+
+					</form>
+					<hr>
+					<div class="">
+						<a class="small" href="<?php url();?>/ingresar">Volver atrás</a>
+					</div>
 					<?php } else {?>
 
 					<h1 class="h4 text-gray-800 mb-4">Ingresá con tu cuenta</h1>
+
+					<?php if(getparams('action') == 'resetpasssuccess'):?>
+					<div class="alert alert-info">
+						Tu contraseña fue modificada, ingresá con tus nuevos datos
+					</div>
+					<?php endif;?>
 					
 					<form class="user needs-validation js-ajaxform" method="post" novalidate>
 

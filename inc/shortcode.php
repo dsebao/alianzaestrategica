@@ -1,5 +1,9 @@
 <?php
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+
 // Useful Shortcodes
 add_shortcode('home_url', 'return_home_url');
 add_filter('widget_text', 'do_shortcode'); // enable shortcodes on widgets

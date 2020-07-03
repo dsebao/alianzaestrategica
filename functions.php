@@ -16,6 +16,10 @@ $theme_includes = array(
 	'/wp_bootstrap_nav.php',
 	'/pagination.php',
 	'/hooks.php',
+
+	//Metaboxes & Custom Posts
+	'/customposts.php',
+	'/metaboxes.php',
 	'/app.php',
 	'/ajax.php',
 );

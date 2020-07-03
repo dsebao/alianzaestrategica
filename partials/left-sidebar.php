@@ -13,16 +13,56 @@
     <li class="nav-item">
         <a class="nav-link" href="<?php url();?>/dashboard">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Inicio</span></a>
+            <span>Panel</span></a>
     </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
 
+    <?php
+
+    //Obtengo las adhesiones de empresas del usuarios
+    $empresas = UserData::inst()->empresas();
+    $adhesion = UserData::inst()->adhesion();
+
+    if($empresas || $adhesion) : ?>
+
     <!-- Heading -->
     <div class="sidebar-heading">
-        Perfil
+        ACCIONES
     </div>
+
+    <!-- Nav Item -->
+    <li class="nav-item">
+        <a class="nav-link" href="<?php url();?>/dashboard/perfil">
+            <i class="fas fa-fw fa-hand-paper"></i>
+            <span>Servicios</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="<?php url();?>/dashboard/perfil">
+            <i class="fas fa-fw fa-scroll"></i>
+            <span>Presupuestos</span>
+        </a>
+    <li class="nav-item">
+        <a class="nav-link" href="<?php url();?>/dashboard/perfil">
+            <i class="fas fa-fw fa-inbox"></i>
+            <span>Mensajes</span>
+        </a>
+    </li>
+        
+    <?php endif;?>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        PERFIL
+    </div>
+
 
     <!-- Nav Item -->
     <li class="nav-item">
@@ -32,12 +72,28 @@
         </a>
     </li>
 
+    <!-- Nav Item -->
+    <li class="nav-item">
+        <a class="nav-link" href="<?php url();?>/dashboard/perfil">
+            <i class="fas fa-fw fa-network-wired"></i>
+            <span>Esquemas</span>
+        </a>
+    </li>
+
+    <!-- Nav Item -->
+    <li class="nav-item">
+        <a class="nav-link" href="<?php url();?>/dashboard/perfil">
+            <i class="fas fa-fw fa-wallet"></i>
+            <span>Billetera</span>
+        </a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 
                 <!-- Nav Item - Tables -->
     <li class="nav-item">
-        <a class="nav-link" href="<?php wp_login_url();?>">
+        <a class="nav-link" href="<?php echo wp_logout_url(home_url());?>">
             <i class="fas fa-fw fa-sign-out-alt"></i>
             <span>Cerrar Sesión</span></a>
     </li>

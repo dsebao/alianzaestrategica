@@ -57,6 +57,10 @@ function modules() {
   // Bootstrap SCSS
   var bootstrapSCSS = gulp.src('./node_modules/bootstrap/scss/**/*')
     .pipe(gulp.dest('./vendor/bootstrap/scss'));
+
+  // Select2
+  var select2 = gulp.src('./node_modules/select2/dist/**/*')
+  .pipe(gulp.dest('./vendor/select2'));
     
   // ChartJS
   //var chartJS = gulp.src('./node_modules/chart.js/dist/*.js')
@@ -87,7 +91,7 @@ function modules() {
     .pipe(gulp.dest('./vendor/jquery'));
   
     //Removed ChartJs const
-  return merge(bootstrapJS, bootstrapSCSS, dataTables,notie,validatorJS,fontAwesome, jquery, jqueryEasing);
+  return merge(bootstrapJS, bootstrapSCSS, dataTables,notie,validatorJS, select2,fontAwesome, jquery, jqueryEasing);
 }
 
 // CSS task
