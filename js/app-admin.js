@@ -1,5 +1,23 @@
 "use strict"; // Start of use strict
 
+function detectDirection(){
+	if($('.js-places-autocomplete').length > 0){
+		
+		var options = {
+			componentRestrictions: {country: "AR"}
+		  };
+		new AddressAutocomplete('#form-direccion',options, function (result) {
+			$('input.lat').val(result['coordinates']['lat']);
+			$('input.lng').val(result['coordinates']['lng']);
+
+			($('input[name="ciudad"]').length > 0 ) ? $('input[name="ciudad"]').val(result['cityName']) : "";
+			($('input[name="street"]').length > 0 ) ? $('input[name="street"]').val(result['streetName']) : "";
+			($('input[name="streetNumber"]').length > 0 ) ? $('input[name="streetNumber"]').val(result['streetNumber']) : "";
+			($('input[name="provincia"]').length > 0 ) ? $('input[name="provincia"]').val(result['state']) : "";
+		});
+	}
+}
+
 var nonce = $('meta[name="csrf-token"]').attr('content');
 $.ajaxSetup({headers: {'X-CSRF-TOKEN': nonce}});
 
@@ -83,7 +101,6 @@ function loadingAjax(){
 
 function messageDiv(type,message){
 	notie.alert({ type: type, text: message, time: 100});
-	//form.find('.message').html('<div class="mt-3 alert alert-' + type + '">' + message + '</div>');
 }
 
 function jsCustomAction(){
@@ -105,20 +122,29 @@ function jsCustomAction(){
 
 			});
 		}
+
+		if(action == 'js-agregar-item'){
+			var c = $('.js-container-item');
+			//Send the option trough ajax to the db
+			ajaxSend('action=userform&typeform=agregar_item_empresa',function(data){
+			},function(out){
+				console.log(out);
+				c.append(out);
+			},'text');
+		}
 	});
 }
 
 function formvalidations(){
 	$('form.simpleform').submit(function(event) {
 		var form = $(this);
-		event.preventDefault();
 
 		if (form[0].checkValidity() === false) {
 			event.preventDefault();
 			event.stopPropagation();
 			form[0].classList.add('was-validated');
 		} else {
-			form.submit();
+			return;
 		}
 	})
 }
@@ -258,10 +284,22 @@ function ajaxForms(){
 		e.preventDefault();
 	});
 
+	$('.customselect').select2({
+		theme: 'bootstrap4',
+	});
+
 	formvalidations();
 
 	ajaxForms();
 
 	jsCustomAction();
+
+	detectDirection();
+
+	if($('.js-message').length > 0){
+		var tt = $('.js-message').data('type');
+		var tm = $('.js-message').data('message');
+		messageDiv(tt,tm);
+	}
 
 })(jQuery); // End of use strict

@@ -16,7 +16,7 @@ function custom_post_type() {
 		'label'                 => 'Empresas',
 		'description'           => 'Empresas creadas',
 		'labels'                => $labels,
-		'taxonomies'            => array( 'category', 'post_tag' ),
+		'taxonomies'            => array('rubro'),
 		'hierarchical'          => false,
 		'public'                => true,
 		'show_ui'               => true,
@@ -39,5 +39,91 @@ function custom_post_type() {
 	);
 	register_post_type( 'empresas', $args );
 
+	$labels = array(
+		'name'                  => 'Servicios',
+		'singular_name'         => 'Servicio',
+		'menu_name'             => 'Servicios',
+		'name_admin_bar'        => 'Servicios',
+	);
+	$args = array(
+		'label'                 => 'Servicios',
+		'description'           => 'Servicios creadas',
+		'labels'                => $labels,
+		'taxonomies'            => array('rubro'),
+		'hierarchical'          => false,
+		'public'                => true,
+		'show_ui'               => true,
+        'show_in_menu'          => true,
+        'menu_icon'             => 'dashicons-rest-api',
+		'supports'              => array('title','editor','page-attributes'),
+		'menu_position'         => 6,
+		'show_in_admin_bar'     => true,
+		'show_in_nav_menus'     => true,
+		'can_export'            => true,
+		'has_archive'           => true,
+		'exclude_from_search'   => false,
+		'publicly_queryable'    => true,
+		'capability_type'       => 'post',
+	    'rewrite' => array(
+	      'slug' => 'servicios',
+	      'with_front' => false
+	    ),
+	    'has_archive' => 'servicios',
+	);
+	register_post_type( 'servicios', $args );
+
 }
 add_action( 'init', 'custom_post_type', 0 );
+
+
+function register_taxonomy_rubro(){
+    $labels = [
+        'name'              => 'Rubros',
+		'singular_name'     => 'Rubro',
+		'search_items'      => 'Buscar',
+		'all_items'         => 'Todos los items',
+		'parent_item'       => 'Item Padre',
+		'parent_item_colon' => 'Item Padre',
+		'edit_item'         => 'Editar',
+		'update_item'       => 'Actualizar',
+		'add_new_item'      => 'Agregar nuevo',
+		'new_item_name'     => 'Nombre item nuevo',
+		'menu_name'         => 'Rubros',
+		];
+	$args = [
+		'hierarchical'      => true, // make it hierarchical (like categories)
+		'labels'            => $labels,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'query_var'         => true,
+		'rewrite'           => ['slug' => 'rubro'],
+	];
+	register_taxonomy('rubro', ['servicios','empresas'], $args);
+}
+add_action('init', 'register_taxonomy_rubro');
+
+function register_taxonomy_categoria(){
+    $labels = [
+        'name'              => 'Categoria',
+		'singular_name'     => 'Categoria',
+		'search_items'      => 'Buscar',
+		'all_items'         => 'Todos los items',
+		'parent_item'       => 'Item Padre',
+		'parent_item_colon' => 'Item Padre',
+		'edit_item'         => 'Editar',
+		'update_item'       => 'Actualizar',
+		'add_new_item'      => 'Agregar nuevo',
+		'new_item_name'     => 'Nombre item nuevo',
+		'menu_name'         => 'Categorias',
+	];
+	$args = [
+		'hierarchical'      => false, // make it hierarchical (like categories)
+		'labels'            => $labels,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'query_var'         => true,
+		'rewrite'           => ['slug' => 'categoria'],
+	];
+	register_taxonomy('categoria', ['servicios','empresas'], $args);
+}
+add_action('init', 'register_taxonomy_categoria');

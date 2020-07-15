@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Template name: Perfil Empresas
+ * Template name: Empresas Listado
  */
 
 
@@ -70,18 +70,15 @@ get_header();
 					</div>
 					<?php endif;?>
 
-					<?php if(!empty($empresas)) : ?>
+					<?php if(!empty($empresas)) :
 
-					<div class="card shadow mb-4">
-						<div class="card-header card-header py-3 d-flex flex-row align-items-center justify-content-between">
-							<h6 class="text-primary">Esquemas</h6>
-						</div>
-						<div class="card-body">
-							<?php get_template_part('partials/forms/proyecto','form');?>
-					  	</div>
-					</div>
+						foreach($empresas as $e) {?>
+						
+						<?php get_template_part('partials/empresas/empresa','card');?>
+	
+						<?php }
 
-					<?php endif; ?>
+					endif; ?>
 
 				</div>
 				<!-- /.container-fluid -->

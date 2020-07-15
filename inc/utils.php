@@ -506,3 +506,90 @@ function rearrange_files($arr) {
     }
     return $new_array;
 }
+
+/**
+ * Create options items for a select using an array
+ *
+ * @param [array] $options Array of elements
+ * @param string $selected The value that is selected
+ * @return html
+ */
+function getOptionsCustom($options,$selected = ''){
+    foreach ( $options as $a ) {	
+		if(is_array($selected)){
+			$m = array();
+			foreach($selected as $x){
+				($a == $x) ? $m[] = true : "";
+			}
+			if(in_array(true,$m))
+				$z = 'selected';
+			else 
+				$z = '';	
+		} else {
+			$z = ($a == $selected) ? 'selected' : "";
+		}
+
+        echo "<option value='" . $a . "' ".$z.">" .$a ."</option>";
+    }
+}
+
+
+/**
+ * Create options based on certain category
+ *
+ * @param string $taxname Name of the taxonomy
+ * @param string $selected The current item selected, based on ID
+ * @param boolean $opt If true create upper label parent
+ * @param string $value What to show in value of the option
+ * @return string The Html
+ */
+function getOptionsCategory($taxname,$selected = '',$opt = false,$value = 'id'){
+	$categories = get_terms( $taxname, array(
+		'hide_empty' => false,
+  	));
+
+	foreach ($categories as $category) {
+		if($opt){
+			if (0 == $category->parent) {
+				echo "<optgroup value=".$category->slug." label=".$category->name.">";
+				$terms = get_terms( $taxname, array(
+					'hide_empty' => false,
+					'parent' => $category->term_id
+				));
+
+				foreach ($terms as $k) {
+					$s = ($selected != '' && $selected == $k->name) ? " selected" : '';
+					echo "<option value='".$k->name."' $s>".$k->name."</option>";
+				}
+				echo "</optgroup>";
+		  	}
+		} else {
+			switch ($value){
+				case 'slug':
+					$val = $category->slug;
+				break;
+				case 'name':
+					$val = $category->name;
+				break;
+				case 'id':
+					$val = $category->term_id;
+				break;
+			}
+
+			$s = ($selected != '' && $selected == $val) ? " selected" : '';
+			echo "<option value='".$val."' $s>".$category->name."</option>";
+		}
+	}
+}
+
+function detectUniqueCuit($cuit){
+
+	$cuits = new WP_Query("post_type=empresas&meta_key=empresa_cuit&meta_value=$cuit");
+	$found = $cuits->posts;
+
+	if(empty($found)){
+		return true;
+	} else {
+		return false;
+	}
+}

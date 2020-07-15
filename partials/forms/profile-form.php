@@ -52,7 +52,7 @@ $usermeta = get_user_meta($theuser->ID);
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="perfil">Tipo de perfil</label>
-                        <input type="number" class="form-control" name="tel" value="<?php echo (isset($usermeta['user_tel'][0])) ? $usermeta['user_tel'][0] : "";?>">
+                        <input type="text" class="form-control" name="perfil" value="<?php echo (isset($usermeta['user_perfil'][0])) ? $usermeta['user_perfil'][0] : "";?>">
                     </div>
                 </div>
             </div>

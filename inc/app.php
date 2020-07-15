@@ -98,6 +98,29 @@ class UserData{
 
     }
 
+    /**
+     * Crea un select con el istado de empresas del usuario
+     *
+     * @param int $user
+     * @return array
+     */
+    public function empresasSelect(){
+
+        $posts = get_posts("post_type=empresas&author=$this->user");
+        $empresas = array();
+
+        if(is_array($posts)){
+            $empresas = '';
+            foreach($posts as $p){
+                $empresas .= "<option value='{$p->ID}'>{$p->post_title}</option>";
+            }
+            return $empresas;
+        } else {
+            $empresas;
+        }
+
+    }
+
     private function getallmeta(){
 
         $data = get_user_meta($this->user);
@@ -178,6 +201,101 @@ class UserData{
         else
             return false;
     }
+}
+
+class Empresa{
+
+    private $id;
+
+    function __construct($id){
+        $this->id = $id;
+    }
+
+    public function data(){
+        $data = get_post_meta($this->id);
+        if($data){
+            return $data;
+        } else {
+            return false;
+        }
+    }
+
+    public function printdata($key){
+        $data = $this->data();
+        if(isset($data[$key])){
+            return $data[$key][0];
+        } else {
+            return false;
+        }
+    }
+
+    public function detectOperations(){
+        $data = $this->printdata('empresa_data');
+
+        if($data){
+            $data = json_decode($this->printdata('empresa_data'),true);
+            if(!empty($data)){
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public function servicios(){
+        $posts = get_posts("post_type=servicios&meta_key=servicio_esquema&meta_value=$this->id");
+        return $posts;
+    }
+
+    public function serviciosCard(){
+
+        $posts = get_posts("post_type=servicios&meta_key=servicio_esquema&meta_value=$this->id");
+
+        $html = '';
+        foreach($posts as $service){
+            $meta = get_post_meta($service->ID);
+
+            $html .= "<div class='card card-items mb-4'>";
+            $html .= "<div class='card-header py-3 d-flex flex-row align-items-center justify-content-between'>
+                <h6 class='m-0 font-weight-bold text-primary'>$service->post_title</h6>
+                <div class='dropdown no-arrow'>
+                    <a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                        <i class='fas fa-ellipsis-v fa-sm fa-fw text-gray-600'></i>
+                    </a>
+                    <div class='dropdown-menu dropdown-menu-right shadow animated--fade-in' aria-labelledby='dropdownMenuLink' style=''>
+                            <a class='dropdown-item' href='#'>Editar</a>
+                            <a class='dropdown-item' href='#'>Eliminar</a>
+                        </div>
+                    </div>
+                </div>";
+
+            $html .= "<div class='card-body py-2'><div class='card-metatag mb-2'><span class='badge badge-primary font-weight-normal text-white mr-2'>{$meta['servicio_esquema_nombre'][0]}</span>";
+            $html .= "<span class='badge badge-warning font-weight-normal text-dark'>{$meta['servicio_tipo'][0]}</span></div>";
+            $html .= "<p class='card-contenido mb-0'>$service->post_content</p>";
+            $html .= '</div></div>';
+        }
+        return $html;
+    }
+
+    public function serviciosList(){
+        
+        $posts = get_posts("post_type=servicios&meta_key=servicio_esquema&meta_value=$this->id");
+
+        if(!empty($posts)){
+            
+            $html = '';
+            $html .= "<h6 class='text-primary text-uppercase small'>Servicios adjuntos</h6>";
+            
+            foreach($posts as $servicio){
+                $meta = get_post_meta($servicio->ID);
+                $html .= "<div class='alert alert-info mb-3'><h6 class='mb-0'>$servicio->post_title</h6><span class='badge badge-primary'>{$meta['servicio_tipo'][0]}</span></div>";
+            }
+            return $html;
+        }
+    }
+
 }
 
 

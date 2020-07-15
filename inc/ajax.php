@@ -192,6 +192,7 @@ function userform(){
 		$apellido = sanitize_text_field($_POST['apellido']);
 		$email = sanitize_email($_POST['email']);
 		$tel = sanitize_text_field($_POST['tel']);
+		$perfil = sanitize_text_field($_POST['perfil']);
 		$cuit = sanitize_text_field($_POST['cuit']);
 
 		$update = wp_update_user(array(
@@ -204,6 +205,7 @@ function userform(){
 
 		update_user_meta($theuser->ID,'user_tel',$tel);
 		update_user_meta($theuser->ID,'user_cuit',$cuit);
+		update_user_meta($theuser->ID,'user_perfil',$perfil);
 
 		if(isset($_FILES['picturefile'])){
 			if(any_uploaded('picturefile')){
@@ -248,22 +250,7 @@ function userform(){
 		
 	}
 
-	// if($_POST['typeform'] == 'userproject_form'){
-	// 	global $theuser;
-
-	// 	$proyecto = sanitize_text_field($_POST['val']);
-	// 	$u = update_user_meta($theuser->ID,'user_data',wp_json_encode(array('proyecto' => $proyecto)));
-
-	// 	if($u)
-	// 		wp_send_json(array('result' => 'updatedprofile','type' => 'success','url' => home_url('/dashboard/perfil')));
-	// 	else
-	// 		wp_send_json(array('result' => 'error','type' => 'warning','message'=> 'Ocurrio un error'));
-	// }
-
-
 	if($_POST['typeform'] == 'consultacuit_form'){
-		
-
 
 		$cuit = sanitize_text_field($_POST['cuit']);
 
@@ -310,8 +297,20 @@ function userform(){
 		} else {
 			wp_send_json(array('result' => 'error','type' => 'error','message' => 'Ocurrio un error'));
 		}
-		
-		
+
+	}
+
+	if($_POST['typeform'] == 'agregar_item_empresa'){
+	
+		ob_start();
+		get_template_part( 'partials/forms/nuevoitem', 'form' );
+		$data = ob_get_clean();
+
+		if($data){
+			echo $data;
+		} else {
+			echo "Ocurrio un error";
+		}
 
 	}
 

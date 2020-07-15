@@ -74,7 +74,7 @@
 
     <!-- Nav Item -->
     <li class="nav-item">
-        <a class="nav-link" href="<?php url();?>/dashboard/perfil">
+        <a class="nav-link" href="<?php url();?>/dashboard/empresa">
             <i class="fas fa-fw fa-network-wired"></i>
             <span>Esquemas</span>
         </a>
