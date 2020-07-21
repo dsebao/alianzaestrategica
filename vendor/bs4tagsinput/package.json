@@ -1,0 +1,41 @@
+{
+  "_from": "bootstrap4-tagsinput",
+  "_id": "bootstrap4-tagsinput@4.1.3",
+  "_inBundle": false,
+  "_integrity": "sha512-JLDTQIum0gOXtqt/tAZbi5YwHAWOiGRwx16UybWO3/aMDLt5wdTRFwXjKLzRCKszbe7N0p5S6N2gF1dINx2tNg==",
+  "_location": "/bootstrap4-tagsinput",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "bootstrap4-tagsinput",
+    "name": "bootstrap4-tagsinput",
+    "escapedName": "bootstrap4-tagsinput",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/bootstrap4-tagsinput/-/bootstrap4-tagsinput-4.1.3.tgz",
+  "_shasum": "5f3bcc7165478baecf36098dfec5ade05f2e2c90",
+  "_spec": "bootstrap4-tagsinput",
+  "_where": "/Volumes/HD/Websites/alianza/app/public/wp-content/themes/alianza",
+  "bugs": {
+    "url": "https://github.com/Nodws/bootstrap4-tagsinput/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "jQuery tags input plugin based on Twitter Bootstrap 4",
+  "homepage": "https://github.com/Nodws/bootstrap4-tagsinput",
+  "license": "MIT",
+  "name": "bootstrap4-tagsinput",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nodws/bootstrap4-tagsinput.git"
+  },
+  "title": "Bootstrap 4 Tagsinput",
+  "version": "4.1.3"
+}

@@ -18,6 +18,12 @@ function detectDirection() {
 	}
 }
 
+function tagsInput() {
+	$('.tagsinput').tagsinput({
+		//Options here
+	});
+}
+
 var nonce = $('meta[name="csrf-token"]').attr('content');
 $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': nonce } });
 
@@ -271,6 +277,14 @@ function dinamicModal() {
 	});
 }
 
+function messageCenter() {
+	if ($('.js-message').length > 0) {
+		var tt = $('.js-message').data('type');
+		var tm = $('.js-message').data('message');
+		messageDiv(tt, tm);
+	}
+}
+
 (function ($) {
 	//Create ajax animation
 	loadingAjax();
@@ -346,12 +360,10 @@ function dinamicModal() {
 
 	dinamicModal();
 
-	if ($('.js-message').length > 0) {
-		var tt = $('.js-message').data('type');
-		var tm = $('.js-message').data('message');
-		messageDiv(tt, tm);
-	}
+	messageCenter();
 
-	let tabledata = $('.dataTable').DataTable();
+	tagsInput();
+
+	var tabledata = $('.dataTable').DataTable();
 
 })(jQuery); // End of use strict

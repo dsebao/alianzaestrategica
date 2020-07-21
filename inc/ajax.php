@@ -321,9 +321,7 @@ function userform()
 			$q[$i]['estado'] = $_POST['estado'];
 
 			$update = update_user_meta($_POST['iduser'], 'user_empresa', wp_json_encode($q));
-			wp_send_json(array('result' => 'actualizado', 'type' => 'success', 'message' => 'Usuario actualizado'));
-		} else {
-			wp_send_json(array('result' => 'error', 'message' => 'Ocurrio un error, intenta nuevamente'));
+			wp_send_json(array('result' => 'actualizado', 'type' => 'success', 'message' => 'Usuario actualizado', 'redirect' => home_url('dashboard/empresas/usuarios')));
 		}
 	}
 
@@ -340,7 +338,7 @@ function userform()
 			array_splice($q, $i, 1);
 
 			update_user_meta($_POST['iduser'], 'user_empresa', wp_json_encode($q));
-			wp_send_json(array('result' => 'actualizado', 'redirect' => home_url('dashboard/empresa/usuarios/')));
+			wp_send_json(array('result' => 'actualizado', 'redirect' => home_url('dashboard/empresas/usuarios')));
 		} else {
 			wp_send_json(array('result' => 'error', 'message' => 'Ocurrio un error, intenta nuevamente'));
 		}

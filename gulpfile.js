@@ -28,7 +28,7 @@ const banner = ['/*!\n',
 // BrowserSync
 function browserSync(done) {
   browsersync.init({
-	proxy: "alianza.local",
+    proxy: "alianza.local",
   });
   done();
 }
@@ -60,38 +60,43 @@ function modules() {
 
   // Select2
   var select2 = gulp.src('./node_modules/select2/dist/**/*')
-  .pipe(gulp.dest('./vendor/select2'));
-    
+    .pipe(gulp.dest('./vendor/select2'));
+
   // ChartJS
   //var chartJS = gulp.src('./node_modules/chart.js/dist/*.js')
-    //.pipe(gulp.dest('./vendor/chart.js'));
+  //.pipe(gulp.dest('./vendor/chart.js'));
   // dataTables
   var dataTables = gulp.src([
-      './node_modules/datatables.net/js/*.js',
-      './node_modules/datatables.net-bs4/js/*.js',
-      './node_modules/datatables.net-bs4/css/*.css'
-    ])
+    './node_modules/datatables.net/js/*.js',
+    './node_modules/datatables.net-bs4/js/*.js',
+    './node_modules/datatables.net-bs4/css/*.css'
+  ])
     .pipe(gulp.dest('./vendor/datatables'));
   // Font Awesome
   var fontAwesome = gulp.src('./node_modules/@fortawesome/**/*')
     .pipe(gulp.dest('./vendor'));
-  
+
   // Notie
   var notie = gulp.src('./node_modules/notie/dist/**/*')
-  .pipe(gulp.dest('./vendor/notie'));
+    .pipe(gulp.dest('./vendor/notie'));
 
   // jQuery Easing
   var jqueryEasing = gulp.src('./node_modules/jquery.easing/*.js')
     .pipe(gulp.dest('./vendor/jquery-easing'));
+
+  // BS tags input
+  var bstagsinput = gulp.src('./node_modules/bootstrap4-tagsinput/**/*')
+    .pipe(gulp.dest('./vendor/bs4tagsinput'));
+
   // jQuery
   var jquery = gulp.src([
-      './node_modules/jquery/dist/*',
-      '!./node_modules/jquery/dist/core.js'
-    ])
+    './node_modules/jquery/dist/*',
+    '!./node_modules/jquery/dist/core.js'
+  ])
     .pipe(gulp.dest('./vendor/jquery'));
-  
-    //Removed ChartJs const
-  return merge(bootstrapJS, bootstrapSCSS, dataTables,notie,validatorJS, select2,fontAwesome, jquery, jqueryEasing);
+
+  //Removed ChartJs const
+  return merge(bootstrapJS, bootstrapSCSS, dataTables, notie, validatorJS, select2, fontAwesome, jquery, jqueryEasing, bstagsinput);
 }
 
 // CSS task
