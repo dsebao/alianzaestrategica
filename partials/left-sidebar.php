@@ -29,26 +29,35 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">
-        ACCIONES
+        ESQUEMAS
     </div>
 
     <!-- Nav Item -->
     <li class="nav-item">
-        <a class="nav-link" href="<?php url();?>/dashboard/perfil">
+        <a class="nav-link" href="<?php url();?>/dashboard/empresas/items">
             <i class="fas fa-fw fa-hand-paper"></i>
-            <span>Servicios</span>
+            <span>Items</span>
         </a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="<?php url();?>/dashboard/perfil">
+        <a class="nav-link" href="<?php url();?>/dashboard/presupuestos">
             <i class="fas fa-fw fa-scroll"></i>
             <span>Presupuestos</span>
         </a>
+    </li>
+
     <li class="nav-item">
-        <a class="nav-link" href="<?php url();?>/dashboard/perfil">
+        <a class="nav-link" href="<?php url();?>/dashboard/mensajes">
             <i class="fas fa-fw fa-inbox"></i>
             <span>Mensajes</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="<?php url();?>/dashboard/empresas/usuarios">
+            <i class="fas fa-fw fa-users"></i>
+            <span>Usuarios</span>
         </a>
     </li>
         

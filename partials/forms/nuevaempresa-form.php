@@ -62,7 +62,7 @@ global $theuser;
             <div class="form-group">
                 <label for="categoria">Categoría</label>
                 <select name="categoria[]" id="categoria" class="form-control customselect">
-                    <?php getOptionsCategory('category');?>
+                    <?php getOptionsCategory('rubro');?>
                 </select>
             </div>
 
