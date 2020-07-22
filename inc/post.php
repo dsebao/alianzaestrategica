@@ -123,6 +123,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'nuevoitem_form' && wp_verify
     */
     $categoria = (isset($_POST['categoria']) && $_POST['categoria'] != '') ? $_POST['categoria'] : $errores[] = "Ingresa una categoria";
 
+    $cat = explode(',', $categoria);
+
+    array_filter($cat);
+
     $descripcion = (isset($_POST['descripcion']) && $_POST['descripcion'] != '') ? sanitize_textarea_field($_POST['descripcion']) : $errores[] = "Ingresa una descripción";
 
     $args = array(
@@ -145,9 +149,9 @@ if (isset($_POST['action']) && $_POST['action'] == 'nuevoitem_form' && wp_verify
         add_action('init', 'process_submit_part');
         function process_submit_part()
         {
-            global $idpost, $rubro, $categoria;
+            global $idpost, $rubro, $cat;
             wp_set_object_terms($idpost, intval($rubro), 'rubro');
-            wp_set_object_terms($idpost, $categoria, 'categoria');
+            wp_set_object_terms($idpost, $cat, 'categoria');
         }
 
 

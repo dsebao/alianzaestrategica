@@ -344,6 +344,27 @@ function userform()
 		}
 	}
 
+	if ($_POST['typeform'] == 'delete_item') {
+		//Obtengo la instancia del Usuario
+
+		global $theuser;
+		$e = $_POST['e'];
+
+		$permiso = UserData::inst()->permisosEmpresa($e);
+
+		if (in_array('editor', $permiso) || in_array('administrador', $permiso)) {
+			$u = wp_delete_post($_POST['iditem']);
+
+			if ($u) {
+				wp_send_json(array('result' => 'actualizado', 'redirect' => home_url('dashboard/empresas/items')));
+			} else {
+				wp_send_json(array('result' => 'error', 'message' => 'Ocurrio un error, intenta nuevamente'));
+			}
+		} else {
+			wp_send_json(array('result' => 'error', 'message' => 'No posees permisos para eliminar items'));
+		}
+	}
+
 	die();
 }
 add_action('wp_ajax_userform', 'userform');

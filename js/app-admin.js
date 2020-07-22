@@ -20,7 +20,7 @@ function detectDirection() {
 
 function tagsInput() {
 	$('.tagsinput').tagsinput({
-		//Options here
+		maxTags: 2
 	});
 }
 
@@ -109,6 +109,30 @@ function messageDiv(type, message) {
 	notie.alert({ type: type, text: message, time: 100 });
 }
 
+function mainSearchInput() {
+	if ($('body.page-template-search').length > 0) {
+		var urlParams = new URLSearchParams(window.location.search);
+		var tiposearch = urlParams.get('tipo');
+
+		if (tiposearch == 'servicios' || tiposearch == 'empresas' || tiposearch == 'productos') {
+			$('form#mainsearch .search-panel span#search_concept').text(tiposearch);
+		}
+
+
+
+	}
+
+	$('.search-panel .dropdown-menu').find('a').click(function (e) {
+		e.preventDefault();
+		var param = $(this).attr("href").replace("#", "");
+		var concept = $(this).text();
+		$('.search-panel span#search_concept').text(concept);
+		$('.input-group #main-input-search').val(param);
+		$('form#mainsearch').submit();
+	});
+
+}
+
 function jsCustomAction() {
 
 	// Detect custom actions
@@ -148,6 +172,23 @@ function jsCustomAction() {
 				}, function (out) {
 					messageDiv(out.type, out.message);
 					$(this).parent('tr#' + meta[0].usuario).remove();
+				}, 'json');
+			}
+
+		}
+
+		if (action == 'js-delete-item') {
+			if (confirm('Deseas eliminar este item?')) {
+				var iditem = $(this).data('id');
+				var ide = $(this).data('empresa');
+
+				//Send the option trough ajax to the db
+				ajaxSend('action=userform&typeform=delete_item&iditem=' + iditem + '&e=' + ide, function (data) {
+				}, function (out) {
+					if (out.result == 'actualizado')
+						window.location.href = out.redirect;
+
+					messageDiv(out.type, out.message);
 				}, 'json');
 			}
 
@@ -365,5 +406,7 @@ function messageCenter() {
 	tagsInput();
 
 	var tabledata = $('.dataTable').DataTable();
+
+	mainSearchInput();
 
 })(jQuery); // End of use strict

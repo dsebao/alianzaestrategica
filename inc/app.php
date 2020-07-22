@@ -97,6 +97,45 @@ function getUserEmpresadata($user, $empresa)
     }
 }
 
+function searchQuery($get, $pages = 30, $paged = 1)
+{
+    //Crear un query para empresas /servicios y productos
+
+    $posttype = array();
+
+    if ($get['tipo'] == 'empresas') {
+        $posttype[] = 'empresas';
+    } elseif ($get['tipo'] == 'servicios') {
+        $posttype[] = 'servicios';
+    }
+
+
+    $args = array(
+        's' => $get['search'],
+        'post_type' => $posttype,
+        'posts_per_page' => $pages,
+        //'paged' => $paged
+    );
+
+    $the_query = new WP_Query($args);
+    return $the_query;
+}
+
+function taxTags($id, $tax)
+{
+    $terms = get_the_terms($id, $tax);
+    $html = '<div class="timeline--smalltags">';
+    if ($terms) :
+
+        foreach ($terms as $t) {
+            $html .= "<span class='timeline--smalltags--items'>$t->name</span>";
+        }
+
+    endif;
+    $html .= '</div>';
+    return $html;
+}
+
 /**
  * Main Class for User Actions
  */
@@ -248,9 +287,14 @@ class UserData
 
         $data = $this->adhesion();
 
-        $i = array_search($rol, array_column($data, 'rol'));
-        if ($i !== false) {
-            return $data[$i];
+        if ($data) {
+
+            $i = array_search($rol, array_column($data, 'rol'));
+            if ($i !== false) {
+                return $data[$i];
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
@@ -331,8 +375,15 @@ class Empresa
         foreach ($posts as $service) {
             $meta = get_post_meta($service->ID);
 
+            $terms = get_the_terms($service->ID, 'categoria');
+
+            $cat = '';
+            foreach ($terms as $t) {
+                $cat .= "<span class='breadcrumb-item text-xs text-uppercase font-weight-normal text-gray-600'>$t->name</span>";
+            }
+
             $html .= "<div class='card card-items mb-4'>";
-            $html .= "<div class='card-header py-3 d-flex flex-row align-items-center justify-content-between'>
+            $html .= "<div class='card-header py-3 d-flex flex-row align-items-center justify-content-between' data-meta=''>
                 <h6 class='m-0 font-weight-bold text-primary'>$service->post_title</h6>
                 <div class='dropdown no-arrow'>
                     <a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
@@ -340,14 +391,16 @@ class Empresa
                     </a>
                     <div class='dropdown-menu dropdown-menu-right shadow animated--fade-in' aria-labelledby='dropdownMenuLink' style=''>
                             <a class='dropdown-item' href='#'>Editar</a>
-                            <a class='dropdown-item' href='#'>Eliminar</a>
+                            <a class='dropdown-item' data-action='js-delete-item' href='#' data-id='$service->ID' data-empresa='$this->id'>Eliminar</a>
                         </div>
                     </div>
                 </div>";
 
-            $html .= "<div class='card-body py-2'><div class='card-metatag mb-2'><span class='badge badge-primary font-weight-normal text-white mr-2'>{$meta['servicio_esquema_nombre'][0]}</span>";
-            $html .= "<span class='badge badge-warning font-weight-normal text-dark'>{$meta['servicio_tipo'][0]}</span></div>";
-            $html .= "<p class='card-contenido mb-0'>$service->post_content</p>";
+            $html .= "<div class='card-body py-2'>";
+            $html .= "<div class='card-metatag'>$cat</div>";
+            $html .= "<p class='card-contenido my-2'>$service->post_content</p>";
+            $html .= "<div class='card-metatag mb-2'><span class='badge badge-primary font-weight-normal text-white mr-2'>{$meta['servicio_esquema_nombre'][0]}</span><span class='badge badge-warning font-weight-normal text-dark'>{$meta['servicio_tipo'][0]}</span></div>";
+
             $html .= '</div></div>';
         }
         return $html;

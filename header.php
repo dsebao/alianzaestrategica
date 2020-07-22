@@ -1,13 +1,14 @@
 <?php
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 global $theuser;
 
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
 	<meta charset="utf-8">
@@ -16,7 +17,7 @@ global $theuser;
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	<?php wp_head();?>
+	<?php wp_head(); ?>
 </head>
 
 <body <?php body_class(''); ?>>
@@ -25,7 +26,7 @@ global $theuser;
 	<!-- Page Wrapper -->
 	<div id="wrapper">
 
-		<?php include('partials/left-sidebar.php');?>
+		<?php include('partials/left-sidebar.php'); ?>
 
 		<!-- Content Wrapper -->
 		<div id="content-wrapper" class="d-flex flex-column">
@@ -41,21 +42,7 @@ global $theuser;
 						<i class="fa fa-bars"></i>
 					</button>
 
-					<!-- Topbar Search -->
-					<form
-						class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-						<div class="input-group">
-							<input type="text" class="form-control bg-light border-0 small" placeholder="Buscar empresa, producto o servicio..."
-								aria-label="Search" aria-describedby="basic-addon2">
-							<div class="input-group-append">
-								<button class="btn btn-primary" type="button">
-									<i class="fas fa-search fa-sm"></i>
-								</button>
-							</div>
-						</div>
-					</form>
-
-					<?php include('partials/top-navbar.php');?>
+					<?php include('partials/top-navbar.php'); ?>
 
 				</nav>
 				<!-- End of Topbar -->

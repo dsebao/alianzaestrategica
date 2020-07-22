@@ -1,36 +1,90 @@
 // Custom Card Styling
 
 .card {
-  .card-header {
-    // Format Dropdowns in Card Headings
-    .dropdown {
-      line-height: 1;
-      .dropdown-menu {
-        line-height: 1.5;
-      }
+    .card-header {
+        // Format Dropdowns in Card Headings
+        .dropdown {
+            line-height: 1;
+            .dropdown-menu {
+                line-height: 1.5;
+            }
+        }
     }
-  }
-  // Collapsable Card Styling
-  .card-header[data-toggle="collapse"] {
-    text-decoration: none;
-    position: relative;
-    padding: 0.75rem 3.25rem 0.75rem 1.25rem;
-    &::after {
-      position: absolute;
-      right: 0;
-      top: 0;
-      padding-right: 1.725rem;
-      line-height: 51px;
-      font-weight: 900;
-      content: '\f107';
-      font-family: 'Font Awesome 5 Free';
-      color: $gray-400;
+    // Collapsable Card Styling
+    .card-header[data-toggle="collapse"] {
+        text-decoration: none;
+        position: relative;
+        padding: 0.75rem 3.25rem 0.75rem 1.25rem;
+        &::after {
+            position: absolute;
+            right: 0;
+            top: 0;
+            padding-right: 1.725rem;
+            line-height: 51px;
+            font-weight: 900;
+            content: "\f107";
+            font-family: "Font Awesome 5 Free";
+            color: $gray-400;
+        }
+        &.collapsed {
+            border-radius: $card-border-radius;
+            &::after {
+                content: "\f105";
+            }
+        }
     }
-    &.collapsed {
-      border-radius: $card-border-radius;
-      &::after {
-        content: '\f105';
-      }
+}
+
+.timeline {
+    padding: 20px;
+    background: $white;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+
+    .timeline--header {
+        h3 {
+            font-weight: 500;
+            font-size: 1rem;
+            color: $gray-800;
+            margin-bottom: 0px;
+            line-height: 10px;
+        }
+        h6 {
+            margin-bottom: 5px;
+            color: $gray-600;
+            font-size: 0.7rem;
+            font-weight: 400;
+        }
+        .date {
+            color: $gray-600;
+            font-size: 0.7rem;
+            font-weight: 400;
+            margin-bottom: 0;
+        }
+        .timeline--smalltags {
+            margin: 3px 0 0;
+            font-size: 0.8rem;
+            .timeline--smalltags--items + .timeline--smalltags--items::before {
+                content: "/";
+            }
+        }
+        .timeline--icon {
+            width: 55px;
+            text-align: center;
+        }
+        .timeline--badge {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.6rem;
+        }
+        .timeline--avatar,
+        .timeline--icon {
+            position: relative;
+            top: -1px;
+        }
     }
-  }
+    .timeline--body {
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
 }

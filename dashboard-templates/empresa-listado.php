@@ -23,6 +23,7 @@ get_header();
 	$userClass = UserData::inst();
 
 	$empresas = $userClass->empresas();
+
 	$adhesion = $userClass->adhesion();
 
 	$rol = $userClass->haveRol('editor');
@@ -77,6 +78,7 @@ get_header();
 	endif;
 
 	if (!empty($empresas)) :
+
 
 		foreach ($empresas as $e) {
 
