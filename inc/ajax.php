@@ -37,6 +37,7 @@ function sendform()
 			$link = md5(uniqid());
 			update_user_meta($user->ID, '_data_user_key', $link);
 			update_user_meta($user->ID, 'user_data', '');
+			update_user_meta($user->ID, 'user_money', wp_json_encode(array()));
 
 			//Send notification email
 			$subject = 'Por favor confirma tu cuenta';

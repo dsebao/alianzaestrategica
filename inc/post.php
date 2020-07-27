@@ -47,6 +47,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'nuevoesquema_form' && wp_ver
             'empresa_email' => $email,
             'empresa_tel' => $tel,
             'empresa_provincia' => $provincia,
+            'empresa_validacion' => '',
             'empresa_ciudad' => $ciudad,
             'empresa_geo' => wp_json_encode(array($_POST['lat'], $_POST['lng'])),
             'empresa_direccion' => $street . " " . $streetNumber,
@@ -62,7 +63,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'nuevoesquema_form' && wp_ver
 
         $data[] = array('id' => $create, 'estado' => 'activo', 'cargo' => '', 'rol' => 'administrador');
 
-        update_user_meta($usuario, 'user_empresa', $data);
+        update_user_meta($usuario, 'user_empresa', wp_json_encode($data));
 
 
         if (isset($_FILES['picturefile'])) {

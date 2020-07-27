@@ -18,16 +18,16 @@
 
                 </div>
                 <div class="timeline--headercontent">
-                    <h3><?php echo $item->post_title; ?></h3>
+                    <h3><?php echo ($data['empresa_validacion'][0] == 'on') ? $GLOBALS['svg-verified'] : ""; ?> <?php echo $item->post_title; ?></h3>
                     <?php echo $rubro; ?>
                     <span class="timeline--badge badge badge-info"><?php echo $data['empresa_tipo'][0]; ?></span>
                 </div>
             </div>
             <div class="timeline--body my-2">
-                <p><?php echo $item->post_content; ?></p>
+                <div class='timeline--body--content js-long-text'><?php echo $item->post_content; ?></div>
             </div>
             <div class="timeline--actions d-flex justify-content-end">
-                <a href="" class="btn btn-sm btn-warning">Contactar</a>
+                <a href="" class="btn btn-sm btn-primary"><i class="far fa-address-card mr-2"></i>Contactar</a>
             </div>
         </div>
     </div>

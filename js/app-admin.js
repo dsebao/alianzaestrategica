@@ -18,6 +18,30 @@ function detectDirection() {
 	}
 }
 
+function WordCount(str) {
+	return str.split(" ").length;
+}
+
+function shortText() {
+	var maxLength = 110;
+	if ($('.js-long-text').length > 0) {
+		$(".js-long-text").each(function () {
+			var myStr = $(this).text();
+			if ($.trim(myStr).length > maxLength) {
+				var newStr = myStr.substring(0, maxLength);
+				var removedStr = myStr.substring(maxLength, $.trim(myStr).length);
+				$(this).empty().html(newStr);
+				$(this).append(' <a href="javascript:void(0);" class="js-read-more">leer más...</a>');
+				$(this).append('<span class="js-more-text">' + removedStr + '</span>');
+			}
+		});
+		$(".js-read-more").click(function () {
+			$(this).siblings(".js-more-text").contents().unwrap();
+			$(this).remove();
+		});
+	}
+}
+
 function tagsInput() {
 	$('.tagsinput').tagsinput({
 		maxTags: 2
@@ -329,6 +353,8 @@ function messageCenter() {
 (function ($) {
 	//Create ajax animation
 	loadingAjax();
+
+	shortText();
 
 	$('input[type="file"]').change(function (e) {
 		var fileName = e.target.files[0].name;

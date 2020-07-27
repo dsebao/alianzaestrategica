@@ -8,7 +8,9 @@
 // Detect if user are not logued
 protectedPage();
 
+
 get_header();
+
 
 if (have_posts()) : while (have_posts()) : the_post();
 
@@ -19,21 +21,13 @@ if (have_posts()) : while (have_posts()) : the_post();
 			<!-- Page Heading -->
 			<h1 class="h3 mb-4 text-gray-800"><?php wp_title(''); ?></h1>
 
+			<?php get_template_part('partials/dashboard/dashboard', 'welcome'); ?>
+
 			<div class="row">
 				<div class="col-md-7">
 					<?php
 
-					if (getparams('search') != '') :
-						echo "Estas buscando " . getparams('search');
-
-						$results = searchQuery($_GET);
-
-						print_r($results);
-
-					else :
-						get_template_part('partials/dashboard/dashboard', 'timeline');
-					endif;
-
+					get_template_part('partials/dashboard/dashboard', 'timeline');
 
 					?>
 				</div>

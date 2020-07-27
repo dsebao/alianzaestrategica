@@ -4,7 +4,6 @@
  * Template name: Empresas Listado
  */
 
-
 // Detect if user are not logued
 protectedPage();
 
@@ -27,6 +26,8 @@ get_header();
 	$adhesion = $userClass->adhesion();
 
 	$rol = $userClass->haveRol('editor');
+
+	$exist = array();
 
 	if (empty($empresas) && !$adhesion) : ?>
 
@@ -82,6 +83,9 @@ get_header();
 
 		foreach ($empresas as $e) {
 
+
+			$exist[] = $e->ID;
+
 			get_template_part('partials/empresas/empresa', 'card');
 		}
 
@@ -90,16 +94,21 @@ get_header();
 	if (!empty($adhesion)) :
 		foreach ($adhesion as $emp) {
 
-			$permiso = $userClass->permisosEmpresa($emp['id']);
+			//Detecto si no esta previamente en los esquemas propios
+			if (!in_array($emp['id'], $exist)) :
 
-			$e = get_post($emp['id']);
+				$permiso = $userClass->permisosEmpresa($emp['id']);
 
-			if (in_array('activo', $permiso)) {
 				$e = get_post($emp['id']);
-				get_template_part('partials/empresas/empresa', 'card');
-			} else {
-				echo "<div class='mb-4 alert alert-info lead'>Tenés una solicitud pendiente de activación para el esquema <b>$e->post_title.</b> Contactate con algún administrador para que te pueda finalizar la adhesión.</div>";
-			}
+
+				if (in_array('activo', $permiso)) {
+					$e = get_post($emp['id']);
+					get_template_part('partials/empresas/empresa', 'card');
+				} else {
+					echo "<div class='mb-4 alert alert-info lead'>Tenés una solicitud pendiente de activación para el esquema <b>$e->post_title.</b> Contactate con algún administrador para que te pueda finalizar la adhesión.</div>";
+				}
+
+			endif;
 		}
 	endif;
 

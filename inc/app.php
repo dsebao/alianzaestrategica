@@ -101,21 +101,31 @@ function searchQuery($get, $pages = 30, $paged = 1)
 {
     //Crear un query para empresas /servicios y productos
 
-    $posttype = array();
+    $args = array();
 
-    if ($get['tipo'] == 'empresas') {
-        $posttype[] = 'empresas';
-    } elseif ($get['tipo'] == 'servicios') {
-        $posttype[] = 'servicios';
+    $args['s'] = $get['search'];
+    if ($get['tipo'] == 'servicios') {
+        $args['post_type'] = 'servicios';
+        $args['meta_query']['relation'] = 'AND';
+        $args['meta_query'][] = array(
+            'key' => 'servicio_tipo',
+            'value' => 'servicio',
+            'compare' => '='
+        );
+    } elseif ($get['tipo'] == 'productos') {
+        $args['post_type'] = 'servicios';
+
+        $args['meta_query']['relation'] = 'AND';
+        $args['meta_query'][] = array(
+            'key' => 'servicio_tipo',
+            'value' => 'producto',
+            'compare' => '='
+        );
+    } else {
+        $args['post_type'] = 'empresas';
     }
 
-
-    $args = array(
-        's' => $get['search'],
-        'post_type' => $posttype,
-        'posts_per_page' => $pages,
-        //'paged' => $paged
-    );
+    $args['posts_per_page'] = $pages;
 
     $the_query = new WP_Query($args);
     return $the_query;
@@ -304,10 +314,38 @@ class UserData
     {
 
         $data = $this->adhesion();
+    }
 
-        $i = array_search($empresa, array_column($data, 'id'));
-        if ($i !== false) {
-            return $data[$i];
+    public function presupuestos()
+    {
+        $data = $this->adhesion();
+
+        if ($data) {
+
+            foreach ($data as $d) {
+                if ($d['rol'] === 'administrador' || $d['rol'] === 'editor') {
+                    $categorias = get_the_terms($d['id'], 'categoria');
+
+                    foreach ($categorias as $t) {
+                        $cats[] = $t->term_id;
+                    }
+
+                    $q = array(
+                        'post_type' => 'presupuestos',
+                        'tax_query' => array(
+                            'relation' => 'AND',
+                            array(
+                                'taxonomy' => 'categoria',
+                                'field'    => 'id',
+                                'terms'    => $cats,
+                            ),
+                        ),
+                        'posts_per_page' => -1
+                    );
+                    $query = new WP_Query($q);
+                    return $query->posts;
+                }
+            }
         } else {
             return false;
         }

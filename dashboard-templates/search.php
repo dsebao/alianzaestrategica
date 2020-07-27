@@ -32,6 +32,8 @@ get_header();
                     foreach ($results->posts as $item) {
                         if (getparams('tipo') == 'servicios')
                             get_template_part('partials/empresas/servicios', 'minicard');
+                        elseif (getparams('tipo') == 'productos')
+                            get_template_part('partials/empresas/servicios', 'minicard');
                         else
                             get_template_part('partials/empresas/empresa', 'minicard');
                     }

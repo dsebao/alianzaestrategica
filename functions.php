@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 $theme_includes = array(
 	//Main settings
@@ -11,7 +11,7 @@ $theme_includes = array(
 	'/shortcode.php',
 	'/metaboxes.php',
 	'/theme_settings.php',
-	
+
 	//Helpers
 	'/wp_bootstrap_nav.php',
 	'/pagination.php',
@@ -25,8 +25,7 @@ $theme_includes = array(
 	'/ajax.php',
 );
 
-foreach ( $theme_includes as $file ) {
+foreach ($theme_includes as $file) {
 
 	require_once get_template_directory() . '/inc' . $file;
-	
 }

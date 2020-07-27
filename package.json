@@ -52,6 +52,7 @@
         "gulp-plumber": "^1.2.1",
         "gulp-rename": "2.0.0",
         "gulp-sass": "4.0.2",
+        "gulp-terser": "^1.2.1",
         "gulp-uglify": "3.0.2",
         "jquery-validation": "^1.19.2",
         "merge-stream": "2.0.0",

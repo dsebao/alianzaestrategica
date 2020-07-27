@@ -1,12 +1,12 @@
 <?php
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 ?>
 
-    </div>
-    <?php wp_footer();?>
+</div>
+<?php wp_footer(); ?>
 
 </body>
 

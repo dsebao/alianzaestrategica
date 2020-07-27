@@ -43,11 +43,19 @@
         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
             <form class="form-inline mr-auto w-100 navbar-search">
                 <div class="input-group">
-                    <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="button">
-                            <i class="fas fa-search fa-sm"></i>
+
+                    <input type="hidden" name="tipo" value="<?php echo getparams('tipo'); ?>" id="main-input-search">
+                    <input type="text" class="form-control bg-light border-0 small" name="search" placeholder="Buscar..." value="<?php echo getparams('search'); ?>">
+
+                    <div class="input-group-btn search-panel input-group-append">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            <span id="search_concept">Filtrar por</span> <span class="caret"></span>
                         </button>
+                        <ul class="dropdown-menu dropdown-menu-right shadow animated--grow-in" role="menu">
+                            <li class='dropdown-item'><a class='dropdown-item' href="#empresas">Empresas</a></li>
+                            <li class='dropdown-item'><a class='dropdown-item' href="#servicios">Servicios</a></li>
+                            <li class='dropdown-item'><a class='dropdown-item' href="#productos">Productos</a></li>
+                        </ul>
                     </div>
                 </div>
             </form>

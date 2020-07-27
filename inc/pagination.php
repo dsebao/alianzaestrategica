@@ -1,13 +1,14 @@
 <?php
+
 /**
  * Pagination layout
  *
  */
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
-if ( ! function_exists( 'zeus_pagination' ) ) {
+if (!function_exists('zeus_pagination')) {
 	/**
 	 * Displays the navigation to next/previous set of posts.
 	 *
@@ -38,9 +39,10 @@ if ( ! function_exists( 'zeus_pagination' ) ) {
 	 * }
 	 * @param string       $class           (Optional) Classes to be added to the <ul> element. Default 'pagination'.
 	 */
-	function zeus_pagination( $args = array(), $class = 'pagination' ) {
+	function zeus_pagination($args = array(), $class = 'pagination')
+	{
 
-		if ( ! isset( $args['total'] ) && $GLOBALS['wp_query']->max_num_pages <= 1 ) {
+		if (!isset($args['total']) && $GLOBALS['wp_query']->max_num_pages <= 1) {
 			return;
 		}
 
@@ -49,36 +51,37 @@ if ( ! function_exists( 'zeus_pagination' ) ) {
 			array(
 				'mid_size'           => 2,
 				'prev_next'          => true,
-				'prev_text'          => __( '&laquo;', 'understrap' ),
-				'next_text'          => __( '&raquo;', 'understrap' ),
+				'prev_text'          => __('&laquo;', 'understrap'),
+				'next_text'          => __('&raquo;', 'understrap'),
 				'type'               => 'array',
-				'current'            => max( 1, get_query_var( 'paged' ) ),
-				'screen_reader_text' => __( 'Posts navigation', 'understrap' ),
+				'current'            => max(1, get_query_var('paged')),
+				'screen_reader_text' => __('Posts navigation', 'understrap'),
 			)
 		);
 
-		$links = paginate_links( $args );
-		if ( ! $links ) {
+		$links = paginate_links($args);
+		if (!$links) {
 			return;
 		}
 
-		?>
+?>
 
 		<nav aria-labelledby="posts-nav-label">
 
 			<h2 id="posts-nav-label" class="sr-only">
-				<?php echo esc_html( $args['screen_reader_text'] ); ?>
+				<?php echo esc_html($args['screen_reader_text']); ?>
 			</h2>
 
-			<ul class="<?php echo esc_attr( $class ); ?>">
+			<ul class="<?php echo esc_attr($class); ?>">
 
 				<?php
-				foreach ( $links as $key => $link ) {
-					?>
-					<li class="page-item <?php echo strpos( $link, 'current' ) ? 'active' : ''; ?>">
-						<?php echo str_replace( 'page-numbers', 'page-link', $link ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				foreach ($links as $key => $link) {
+				?>
+					<li class="page-item <?php echo strpos($link, 'current') ? 'active' : ''; ?>">
+						<?php echo str_replace('page-numbers', 'page-link', $link); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
+						?>
 					</li>
-					<?php
+				<?php
 				}
 				?>
 
@@ -86,6 +89,6 @@ if ( ! function_exists( 'zeus_pagination' ) ) {
 
 		</nav>
 
-		<?php
+<?php
 	}
 }
