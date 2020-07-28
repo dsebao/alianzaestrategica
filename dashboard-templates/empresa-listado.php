@@ -101,7 +101,7 @@ get_header();
 
 				$e = get_post($emp['id']);
 
-				if (in_array('activo', $permiso)) {
+				if (is_array($permiso) && in_array('activo', $permiso)) {
 					$e = get_post($emp['id']);
 					get_template_part('partials/empresas/empresa', 'card');
 				} else {

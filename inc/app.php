@@ -146,6 +146,33 @@ function taxTags($id, $tax)
     return $html;
 }
 
+function createTableData($th, $data, $type = 'post')
+{
+    $html = '<table class="table table-bordered dataTable" width="100%" cellspacing="0"><thead><tr>';
+    if (is_array($th) && count($th) > 0) {
+        foreach ($th as $t) {
+            $html .= "<th>$t</th>";
+        }
+    }
+
+    $html .= '</tr></thead><tbody>';
+
+    if ($type == 'post') {
+        foreach ($data as $d) {
+            $html .= '<tr>';
+            foreach ($d as $unit) {
+                $html .= "<td>$unit</td>";
+            }
+            $html .= "</tr>";
+        }
+    }
+
+    $html .= '<tbody></tbody><table>';
+
+
+    return $html;
+}
+
 /**
  * Main Class for User Actions
  */
@@ -316,38 +343,115 @@ class UserData
         $data = $this->adhesion();
     }
 
-    public function presupuestos()
+    public function presupuestosRecibidos()
     {
+        //Obtengo la data de empresas de mi perfil
         $data = $this->adhesion();
 
+        //Si hay data
         if ($data) {
 
+            //Itero para saber cada id de empresa y si posee el rol adecuado
             foreach ($data as $d) {
-                if ($d['rol'] === 'administrador' || $d['rol'] === 'editor') {
-                    $categorias = get_the_terms($d['id'], 'categoria');
 
+                if ($d['rol'] === 'administrador' || $d['rol'] === 'editor' && $d['estado'] == 'activo') {
+
+                    //Obtengo el rubro de la empresa
+                    $categorias = get_the_terms($d['id'], 'rubro');
+
+                    $rubros = array();
+
+                    //Itero para guardar cada id del rubro
                     foreach ($categorias as $t) {
-                        $cats[] = $t->term_id;
+                        $rubros[] = $t->term_id;
                     }
 
+                    //Armo el query a la db sobre los post presupuestos
                     $q = array(
                         'post_type' => 'presupuestos',
                         'tax_query' => array(
                             'relation' => 'AND',
                             array(
-                                'taxonomy' => 'categoria',
+                                'taxonomy' => 'rubro',
                                 'field'    => 'id',
-                                'terms'    => $cats,
+                                'terms'    => $rubros,
                             ),
                         ),
                         'posts_per_page' => -1
                     );
                     $query = new WP_Query($q);
-                    return $query->posts;
+                    $data = $query->posts;
+
+                    $return = array();
+
+                    //Si hay resultados los guardo formateados para la vista tabla
+                    if ($data) {
+                        foreach ($data as $d) {
+                            $data = get_post_meta($d->ID);
+                            $productos = $data['productos'][0];
+
+                            $return[] = array(
+                                $d->ID,
+                                $d->post_title,
+                                date('d-m-Y', strtotime($d->post_date)),
+                                count($productos),
+                            );
+                        }
+                    }
+
+                    return $return;
                 }
             }
         } else {
             return false;
+        }
+    }
+
+    public function presupuestosEnviados()
+    {
+        //Obtengo la data de empresas de mi perfil
+        $adhesiones = $this->adhesion();
+
+        //Si hay data
+        if ($adhesiones) {
+
+            //Itero para saber cada id de empresa y si posee el rol adecuado
+            foreach ($adhesiones as $d) {
+                if ($d['rol'] === 'administrador' || $d['rol'] === 'editor' && $d['estado'] == 'activo') :
+                    //Armo el query a la db para cargar mis presupuestos generados
+                    $q = array(
+                        'post_type' => 'presupuestos',
+                        'meta_query' => array(
+                            'relation' => 'AND',
+                            array(
+                                'key' => 'presupuestos_empresa',
+                                'value' => $d['id'],
+                                'compare' => '='
+                            )
+                        )
+                    );
+                    $query = new WP_Query($q);
+                    $data = $query->posts;
+
+                    $return = array();
+
+                    //Si hay resultados los guardo formateados para la vista tabla
+                    if ($data) :
+                        foreach ($data as $d) :
+                            $data = get_post_meta($d->ID);
+                            $productos = json_decode($data['presupuestos_productos'][0], true);
+
+                            $return[] = array(
+                                $d->ID,
+                                $d->post_title,
+                                date('d-m-Y', strtotime($d->post_date)),
+                                count($productos),
+                            );
+                        endforeach;
+                    endif;
+                    return $return;
+                endif;
+            }
         }
     }
 }

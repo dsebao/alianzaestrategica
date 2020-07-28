@@ -23,11 +23,22 @@ get_header();
     //Obtengo las adhesiones de empresas del usuarios
     $userClass = UserData::inst();
 
-    $presupuestos = $userClass->presupuestos();
+    $presupuestos = $userClass->presupuestosRecibidos();
 
-    print_r($presupuestos);
-
+    $generateTable = createTableData(
+        array('ID', 'FECHA', 'TITULO', 'PRODUCTOS', 'PEDIDO POR', 'FINALIZA', 'ACCIONES'),
+        $presupuestos,
+        'post'
+    );
     ?>
+
+    <div class="card">
+        <div class="card-body">
+            <?php echo $generateTable; ?>
+        </div>
+    </div>
+
+
 
 </div>
 <!-- /.container-fluid -->

@@ -32,7 +32,8 @@ if (isset($_POST['action']) && $_POST['action'] == 'nuevoesquema_form' && wp_ver
 
     $ciudad = $_POST['ciudad'];
     $provincia = $_POST['provincia'];
-    $categoria = $_POST['categoria'];
+
+    $rubro = $_POST['rubro'];
 
     $args = array(
         'post_type'     => 'empresas',
@@ -40,7 +41,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'nuevoesquema_form' && wp_ver
         'post_title'    => $razonsocial,
         'post_content'  => $bio,
         'post_status'   => 'publish',
-        'post_category' => $categoria,
         'meta_input'    => array(
             'empresa_cuit' => $cuit,
             'empresa_tipo' => $esquema,
@@ -57,6 +57,13 @@ if (isset($_POST['action']) && $_POST['action'] == 'nuevoesquema_form' && wp_ver
 
     if (detectUniqueCuit($cuit)) {
         $create = wp_insert_post($args);
+
+        add_action('init', 'process_submit_part');
+        function process_submit_part()
+        {
+            global $create, $rubro;
+            wp_set_object_terms($create, intval($rubro), 'rubro');
+        }
 
         //Obtenga la data de la empresa asociada al usuario
         $data = json_decode(get_user_meta($usuario, 'user_empresa', true), true);

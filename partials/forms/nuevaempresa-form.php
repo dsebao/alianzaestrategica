@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 global $theuser;
 
@@ -17,7 +17,7 @@ global $theuser;
                         <label for="esquema">Tipo de esquema</label>
                         <select name="esquema" id="" class="form-control customselect" required>
                             <option value="">Selecciona el tipo</option>
-                            <?php echo getOptionsCustom($GLOBALS['tiposesquema']);?>
+                            <?php echo getOptionsCustom($GLOBALS['tiposesquema']); ?>
                         </select>
                         <div class="invalid-feedback">Ingresá el tipo</div>
                     </div>
@@ -50,7 +50,7 @@ global $theuser;
                         <input type="email" class="form-control" name="email" value="" required>
                     </div>
                 </div>
-                
+
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="tel">Teléfono</label>
@@ -60,9 +60,9 @@ global $theuser;
             </div>
 
             <div class="form-group">
-                <label for="categoria">Categoría</label>
-                <select name="categoria[]" id="categoria" class="form-control customselect">
-                    <?php getOptionsCategory('rubro');?>
+                <label for="categoria">Rubro</label>
+                <select name="rubro" id="rubro" class="form-control customselect">
+                    <?php getOptionsCategory('rubro'); ?>
                 </select>
             </div>
 
@@ -75,7 +75,7 @@ global $theuser;
 
         <div class="col-md-4">
             <div class="avatarthumb text-center">
-                
+
             </div>
             <label for="picturefile">LOGO EMPRESA</label>
             <div class="custom-file">
@@ -84,13 +84,13 @@ global $theuser;
             </div>
         </div>
     </div>
-    
+
     <div class="mt-4">
         <input type="hidden" name="action" value="nuevoesquema_form">
-        <?php wp_nonce_field('seguridad','seguridad-form');?>
+        <?php wp_nonce_field('seguridad', 'seguridad-form'); ?>
         <button class="btn btn-primary">Guardar información</button>
     </div>
 </form>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpndlYb94xRz0qbu1gx2CUkMwqrHn1CCs&libraries=places" async defer></script>
-<script src="<?php echo urlt();?>/node_modules/google-address-autocomplete/dist/google-address-autocomplete.min.js"></script>
+<script src="<?php echo urlt(); ?>/node_modules/google-address-autocomplete/dist/google-address-autocomplete.min.js"></script>
