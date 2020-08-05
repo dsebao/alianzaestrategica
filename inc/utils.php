@@ -5,6 +5,29 @@
 defined('ABSPATH') || exit;
 
 /**
+ * Create programaticly pages
+ *
+ * @param array $data All the pages a(title and path)
+ * @return void
+ */
+function createPages($data = array())
+{
+	if (empty($data)) {
+		foreach ($data as $p) {
+			$page = array(
+				'post_title'    => $p['title'],
+				'post_content'  => '',
+				'post_status'   => 'publish',
+				'post_author'   => 1,
+				'post_type' => 'page'
+			);
+			$pageid = wp_insert_post($page);
+			update_post_meta($pageid, '_wp_page_template', $p['path']);
+		}
+	}
+}
+
+/**
  * Main urls
  */
 function url()
