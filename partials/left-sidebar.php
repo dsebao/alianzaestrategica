@@ -49,17 +49,11 @@
                 </a>
                 <div id="presupuestosNav" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar" style="">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="<?php url(); ?>/dashboard/presupuestos/recibidos">Recibidos</a>
+                        <a class="collapse-item" href="<?php url(); ?>/dashboard/presupuestos/recibidos">Bandeja</a>
                         <a class="collapse-item" href="<?php url(); ?>/dashboard/presupuestos/enviados">Enviados</a>
+                        <a class="collapse-item" href="<?php url(); ?>/dashboard/propuestas">Propuestas</a>
                     </div>
                 </div>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="<?php url(); ?>/dashboard/mensajes">
-                    <i class="fas fa-fw fa-inbox"></i>
-                    <span>Mensajes</span>
-                </a>
             </li>
 
             <li class="nav-item">

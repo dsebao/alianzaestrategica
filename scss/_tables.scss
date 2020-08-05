@@ -1,0 +1,21 @@
+table.dataTable {
+    &.table-bordered {
+        border-top: 0 !important;
+    }
+    thead {
+        tr {
+            background-color: #f2f9ff;
+        }
+        th {
+            color: $dark;
+            font-size: 0.75rem;
+            border-bottom: 0 !important;
+            padding: 0.6rem;
+        }
+    }
+    tbody {
+        td {
+            padding: 0.6rem;
+        }
+    }
+}

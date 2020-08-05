@@ -215,9 +215,28 @@ function jsCustomAction() {
 					messageDiv(out.type, out.message);
 				}, 'json');
 			}
-
 		}
-	});
+
+		if (action == 'js-clone') {
+			var wrap = t.data('whereclone');
+			var what = t.data('idclone');
+			var content = $(what).html();
+			$(wrap).append(content).promise().done(function () {
+				console.log('Exito');
+			});
+		}
+
+		if (action == 'js-remove-clone') {
+			what = t.data('elementremove');
+			t.closest(what).remove();
+		}
+
+		if (action == 'js-delete-presupuesto') {
+			if (confirm('Deseas Eliminarlo?')) {
+				alert('Eliminando...');
+			}
+		}
+	})
 }
 
 function formvalidations() {

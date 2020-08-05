@@ -91,3 +91,22 @@
         position: relative;
     }
 }
+
+.propuesta-card {
+    h4 {
+        color: #222;
+    }
+    .meta {
+        margin: 20px 0;
+        line-height: 25px;
+        span {
+            padding: 2px 14px;
+            margin-right: 2px;
+            text-transform: uppercase;
+            font-size: 11px;
+            color: #808080;
+            border-radius: 77px;
+            background: #ffeccf;
+        }
+    }
+}

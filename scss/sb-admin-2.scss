@@ -5,23 +5,23 @@
 @import "../vendor/bootstrap/scss/bootstrap.scss";
 
 // Import Custom SB Admin 2 Mixins and Components
-@import "mixins.scss";
-@import "global.scss";
-@import "typo.scss";
-@import "utilities.scss";
+@import "mixins";
+@import "global";
+@import "typo";
+@import "utilities";
 
 // Custom Components
-@import "dropdowns.scss";
-@import "navs.scss";
-@import "buttons.scss";
-@import "cards.scss";
-@import "charts.scss";
-@import "login.scss";
-@import "error.scss";
-@import "footer.scss";
+@import "dropdowns";
+@import "navs";
+@import "buttons";
+@import "cards";
+@import "login";
+@import "error";
+@import "footer";
 
 //Styles for the frontend pages
-@import "plugins.scss";
-@import "forms.scss";
-@import "dashboard.scss";
-@import "front.scss";
+@import "plugins";
+@import "tables";
+@import "forms";
+@import "dashboard";
+@import "front";

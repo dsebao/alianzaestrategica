@@ -175,3 +175,79 @@ if (isset($_POST['action']) && $_POST['action'] == 'nuevoitem_form' && wp_verify
         $message = array('type' => 'error', 'message' => 'Error: Completa todos los campos');
     }
 }
+
+
+if (isset($_POST['action']) && $_POST['action'] == 'nuevopresupuesto_form' && wp_verify_nonce($_REQUEST['seguridad-form'], 'seguridad')) {
+
+    global $theuser;
+
+    $errores = array();
+
+    $usuario = $theuser->ID;
+
+    $titulo = (isset($_POST['titulo']) && $_POST['titulo'] != '') ? sanitize_text_field($_POST['titulo']) : $errores[] = "Ingresa un titulo";
+
+    $estado = (isset($_POST['estado']) && $_POST['estado'] != '') ? sanitize_text_field($_POST['estado']) : $errores[] = "Ingresa un estado";
+
+    $fecha = (isset($_POST['fecha']) && $_POST['fecha'] != '') ? sanitize_text_field($_POST['fecha']) : $errores[] = "Ingresa una fecha limite";
+
+    $tipo = (isset($_POST['tipo']) && $_POST['tipo'] != '') ? sanitize_text_field($_POST['tipo']) : $errores[] = "Ingresa el tipo de solicitud";
+
+    $esquema = (isset($_POST['esquema']) && $_POST['esquema'] != '') ? sanitize_text_field($_POST['esquema']) : $errores[] = "Ingresa un esquema";
+
+    $items = (isset($_POST['items']) && $_POST['items'] != '') ? $_POST['items'] : $errores[] = "Ingresa algun item";
+
+    $formatItems = array();
+
+    if (is_array($items) && !empty($items)) {
+        $nombres = $items['nombre'];
+        $cantidad = $items['cantidad'];
+        foreach ($nombres as $i => $it) {
+            if (!empty($it))
+                $formatItems[] = array('nombre' => $it, 'cantidad' => $cantidad[$i]);
+        }
+    }
+
+    $esquemanombre = get_the_title($esquema);
+
+    /*
+    Categoria
+    */
+    $rubro = (isset($_POST['rubro']) && $_POST['rubro'] != '') ? $_POST['rubro'] : $errores[] = "Ingresa un rubro";
+
+    $comentarios = (isset($_POST['comentarios']) && $_POST['comentarios'] != '') ? sanitize_textarea_field($_POST['comentarios']) : $errores[] = "Ingresa una descripción";
+
+    $args = array(
+        'post_type'     => 'presupuestos',
+        'post_author'   => $usuario,
+        'post_title'    => $titulo,
+        'post_status' => $estado,
+        'post_content'  => $comentarios,
+        'post_status'   => 'publish',
+        'meta_input'    => array(
+            'presupuesto_tipo' => $tipo,
+            'presupuesto_esquema' => $esquema,
+            'presupuesto_esquemanombre' => $esquemanombre,
+            'presupuesto_fechalimite' => $fecha,
+            'presupuesto_items' => wp_json_encode($formatItems)
+        )
+    );
+
+    if (empty($errores)) {
+        $idpost = wp_insert_post($args);
+
+        add_action('init', 'process_submit_part');
+        function process_submit_part()
+        {
+            global $idpost, $rubro;
+            wp_set_object_terms($idpost, intval($rubro), 'rubro');
+        }
+
+        if ($idpost)
+            wp_redirect(home_url('dashboard/prespuestos/enviados/'));
+        else
+            $message = array('type' => 'error', 'message' => 'Ocurrio un error al crear el presupuesto');
+    } else {
+        $message = array('type' => 'error', 'message' => 'Error: Completa todos los campos');
+    }
+}
