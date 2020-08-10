@@ -17,6 +17,10 @@ global $theuser;
 	<meta name="description" content="">
 	<meta name="author" content="">
 
+	<?php if (is_page_template('dashboard-templates/empresa-nueva.php')) {
+		echo '<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpndlYb94xRz0qbu1gx2CUkMwqrHn1CCs&libraries=places" async defer></script>';
+	} ?>
+
 	<?php wp_head(); ?>
 </head>
 

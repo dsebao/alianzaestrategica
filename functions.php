@@ -21,7 +21,8 @@ $theme_includes = array(
 	'/customposts.php',
 	'/metaboxes.php',
 	'/app.php',
-	'/classes.php',
+	'/classes/userClass.php',
+	'/classes/empresaClass.php',
 	'/post.php',
 	'/ajax.php',
 );

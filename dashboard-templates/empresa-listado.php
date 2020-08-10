@@ -13,106 +13,80 @@ get_header();
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
-	<!-- Page Heading -->
-	<h1 class="h3 mb-4 text-gray-900">Esquemas</h1>
+    <!-- Page Heading -->
+    <h1 class="h3 mb-4 text-gray-900">Esquemas</h1>
 
-	<?php
+    <?php
 
-	//Obtengo las adhesiones de empresas del usuarios
-	$userClass = UserData::inst();
+    //Obtengo las adhesiones de empresas del usuarios
+    $userClass = UserData::inst();
+    $adhesion = $userClass->adhesion();
 
-	$empresas = $userClass->empresas();
+    $exist = array();
 
-	$adhesion = $userClass->adhesion();
+    if (empty($adhesion)) : ?>
 
-	$rol = $userClass->haveRol('editor');
+        <div class='alert alert-info p-4'>
 
-	$exist = array();
+            <h4>Bienvenido <?php echo $theuser->first_name; ?>!</h4>
 
-	if (empty($empresas) && !$adhesion) : ?>
+            <div class="proyectoSelect">
 
-		<div class='alert alert-info p-4'>
+                <p class="lead">En esta instancia podés agregarte como empleado en alguna empresa o crear un perfil de tu emprendimiento o empresa</p>
 
-			<h4>Bienvenido <?php echo $theuser->first_name; ?>!</h4>
+                <a href="" data-toggle="modal" data-target="#unirmeModal" class="btn btn-primary">Unirme a una empresa</a>
+                <a href="<?php echo url(); ?>/dashboard/empresas/nuevo" class="btn btn-success">Crear empresa/emprendimiento</a>
 
-			<div class="proyectoSelect">
+            </div>
 
+            <!-- Modal -->
+            <div class="modal fade" id="unirmeModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Unirme a una empresa</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Para agregarte a una empresa existente comprueba si existe ingresando el CUIT:</p>
+                            <form action="" class="js-consultacuit needs-validation">
+                                <div class="form-group">
+                                    <input type="number" class="form-control" name="cuit" value="" required>
+                                    <div class="invalid-feedback">Ingresá un cuit válido</div>
+                                </div>
+                                <input type="hidden" name="action" value="userform">
+                                <input type="hidden" name="typeform" value="consultacuit_form">
+                                <button type="submit" class="btn btn-primary">Consultar</button>
+                                <div class="js-return">
+                                </div>
+                            </form>
 
-				<p class="lead">En esta instancia podés agregarte como empleado en alguna empresa o crear un perfil de tu emprendimiento o empresa</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php
 
-				<a href="" data-toggle="modal" data-target="#unirmeModal" class="btn btn-primary">Unirme a una empresa</a>
-				<a href="<?php echo url(); ?>/dashboard/empresas/nuevo" class="btn btn-success">Crear empresa/emprendimiento</a>
+    else :
 
-			</div>
+        foreach ($adhesion as $emp) :
+            //Detecto si no esta previamente en los esquemas propios
 
-			<!-- Modal -->
-			<div class="modal fade" id="unirmeModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title">Unirme a una empresa</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<p>Para agregarte a una empresa existente comprueba si existe ingresando el CUIT:</p>
-							<form action="" class="js-consultacuit needs-validation">
-								<div class="form-group">
-									<input type="number" class="form-control" name="cuit" value="" required>
-									<div class="invalid-feedback">Ingresá un cuit válido</div>
-								</div>
-								<input type="hidden" name="action" value="userform">
-								<input type="hidden" name="typeform" value="consultacuit_form">
-								<button type="submit" class="btn btn-primary">Consultar</button>
-								<div class="js-return">
-								</div>
-							</form>
+            $e = get_post($emp['id']);
 
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	<?php
+            if (in_array('activo', $emp)) {
+                $e = get_post($emp['id']);
+                get_template_part('partials/empresas/empresa', 'card');
+            } else {
+                echo "<div class='mb-4 alert alert-info lead'>Tenés una solicitud pendiente de activación para el esquema <b>$e->post_title.</b> Contactate con algún administrador para que te pueda finalizar la adhesión.</div>";
+            }
+        endforeach;
+    endif;
 
-	endif;
-
-	if (!empty($empresas)) :
-
-
-		foreach ($empresas as $e) {
-
-
-			$exist[] = $e->ID;
-
-			get_template_part('partials/empresas/empresa', 'card');
-		}
-
-	endif;
-
-	if (!empty($adhesion)) :
-		foreach ($adhesion as $emp) {
-
-			//Detecto si no esta previamente en los esquemas propios
-			if (!in_array($emp['id'], $exist)) :
-
-				$permiso = $userClass->permisosEmpresa($emp['id']);
-
-				$e = get_post($emp['id']);
-
-				if (is_array($permiso) && in_array('activo', $permiso)) {
-					$e = get_post($emp['id']);
-					get_template_part('partials/empresas/empresa', 'card');
-				} else {
-					echo "<div class='mb-4 alert alert-info lead'>Tenés una solicitud pendiente de activación para el esquema <b>$e->post_title.</b> Contactate con algún administrador para que te pueda finalizar la adhesión.</div>";
-				}
-
-			endif;
-		}
-	endif;
-
-	?>
+    ?>
 
 </div>
 <!-- /.container-fluid -->

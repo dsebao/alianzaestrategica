@@ -6,25 +6,18 @@ const browsersync = require("browser-sync").create();
 const cleanCSS = require("gulp-clean-css");
 const del = require("del");
 const gulp = require("gulp");
-const header = require("gulp-header");
 const merge = require("merge-stream");
+const concat = require("gulp-concat");
 const plumber = require("gulp-plumber");
 const rename = require("gulp-rename");
 const sass = require("gulp-sass");
 const uglify = require("gulp-uglify");
 const terser = require('gulp-terser');
 
-// Load package.json for banner
-const pkg = require('./package.json');
-
-// Set the banner content
-const banner = ['/*!\n',
-  ' * Start Bootstrap - <%= pkg.title %> v<%= pkg.version %> (<%= pkg.homepage %>)\n',
-  ' * Copyright 2013-' + (new Date()).getFullYear(), ' <%= pkg.author %>\n',
-  ' * Licensed under <%= pkg.license %> (https://github.com/BlackrockDigital/<%= pkg.name %>/blob/master/LICENSE)\n',
-  ' */\n',
-  '\n'
-].join('');
+function errorLog(error) {
+  console.error(error);
+  this.emit('end');
+}
 
 // BrowserSync
 function browserSync(done) {
@@ -100,6 +93,7 @@ function modules() {
   return merge(bootstrapJS, bootstrapSCSS, dataTables, notie, validatorJS, select2, fontAwesome, jquery, jqueryEasing, bstagsinput);
 }
 
+
 // CSS task
 function css() {
   return gulp
@@ -113,40 +107,49 @@ function css() {
     .pipe(autoprefixer({
       cascade: false
     }))
-    .pipe(header(banner, {
-      pkg: pkg
-    }))
-    .pipe(gulp.dest("./css"))
+    .pipe(gulp.dest("./"))
     .pipe(rename({
       suffix: ".min"
     }))
     .pipe(cleanCSS())
-    .pipe(gulp.dest("./css"))
+    .pipe(gulp.dest("./"))
     .pipe(browsersync.stream());
 }
 
 // JS task
 function js() {
-  return gulp
+  var libs = gulp
+    .src([
+      './js/libs/**/*.js',
+    ])
+    .pipe(concat('./libs.js'))
+    .pipe(gulp.dest('./js'))
+    .pipe(terser())
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(gulp.dest('./js'));
+  //.pipe(browsersync.stream());
+
+  var app = gulp
     .src([
       './js/*.js',
       '!./js/*.min.js',
     ])
     .pipe(terser())
-    .pipe(header(banner, {
-      pkg: pkg
-    }))
     .pipe(rename({
       suffix: '.min'
     }))
-    .pipe(gulp.dest('./js'))
-    .pipe(browsersync.stream());
+    .pipe(gulp.dest('./js'));
+  //.pipe(browsersync.stream());
+
+  return merge(libs, app).pipe(browsersync.stream());
 }
 
 // Watch files
 function watchFiles() {
   gulp.watch("./scss/**/*", css);
-  gulp.watch(["./js/**/*", "!./js/**/*.min.js"], js);
+  gulp.watch(["./js/**/*", "!./js/**/*.min.js", "!./js/main.js"], js);
   gulp.watch("./**/*.php", browserSyncReload);
 }
 

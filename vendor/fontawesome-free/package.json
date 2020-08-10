@@ -5,6 +5,7 @@
       "/Volumes/HD/Websites/alianza/app/public/wp-content/themes/alianza"
     ]
   ],
+  "_development": true,
   "_from": "@fortawesome/fontawesome-free@5.12.0",
   "_id": "@fortawesome/fontawesome-free@5.12.0",
   "_inBundle": false,

@@ -661,3 +661,25 @@ function detectUniqueCuit($cuit)
 		return false;
 	}
 }
+
+/**
+ * Split a json string to array with long and lat
+ *
+ * @param [string] $string like ["232323","82732837"]
+ * @return void
+ */
+function geoCode($string)
+{
+	$address = json_decode($string, true);
+	$prepAddr = $address[0] . "," . $address[1];
+	$geocode = file_get_contents('https://maps.google.com/maps/api/geocode/json?latlng=' . $prepAddr . '&sensor=false&key=AIzaSyBpndlYb94xRz0qbu1gx2CUkMwqrHn1CCs&');
+	/* Example to view
+	https://maps.google.com/maps/api/geocode/json?latlng=-34.6026884,-58.37406660000001&sensor=false&key=AIzaSyBpndlYb94xRz0qbu1gx2CUkMwqrHn1CCs
+	*/
+	$output = json_decode($geocode);
+	$out = array();
+
+	$out['geo'] = array($output->results[0]->geometry->location->lat, $output->results[0]->geometry->location->lng);
+	$out['complete'] = $output->results[0];
+	return $out;
+}

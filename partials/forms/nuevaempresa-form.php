@@ -91,6 +91,3 @@ global $theuser;
         <button class="btn btn-primary">Guardar información</button>
     </div>
 </form>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpndlYb94xRz0qbu1gx2CUkMwqrHn1CCs&libraries=places" async defer></script>
-<script src="<?php echo urlt(); ?>/node_modules/google-address-autocomplete/dist/google-address-autocomplete.min.js"></script>

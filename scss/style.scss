@@ -1,5 +1,13 @@
+/*
+Theme Name: Alianza
+Author: @dsebaoao.github.io
+Description: Theme limpio basado en Bootstrap 4
+Version: 1.0
+Text Domain: zeus
+*/
+
 // Import Custom SB Admin 2 Variables (Overrides Default Bootstrap Variables)
-@import "variables.scss";
+@import "variables";
 
 // Import Bootstrap
 @import "../vendor/bootstrap/scss/bootstrap.scss";

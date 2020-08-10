@@ -31,6 +31,7 @@ function sendform()
 
 		if (!is_wp_error($user_id)) {
 			$user = new WP_User($user_id);
+
 			wp_clear_auth_cookie();
 
 			//generate key for validation
@@ -55,7 +56,7 @@ function sendform()
 		} else {
 
 			$error_string = $user_id->get_error_message();
-			wp_send_json(array('type' => 'danger', 'result' => 'error', 'message' =>  $error_string, 'error' => $error_string, 'resetform' => false));
+			wp_send_json(array('type' => 'danger', 'result' => 'error', 'message' =>  $error_string, 'url' => '', 'error' => $error_string, 'resetform' => false));
 		}
 	}
 
